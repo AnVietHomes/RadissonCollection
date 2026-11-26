@@ -3,8 +3,8 @@
     --pill-gold: #f8be62;
     --text-dark: #181512;
     --text-muted: #4a423b;
-    --card-radius: clamp(18px, 1.8vw, 26px);
-    --inner-radius: clamp(12px, 1.1vw, 18px);
+    --card-radius: clamp(12px, 1.8vw, 26px);
+    --inner-radius: clamp(10px, 1.1vw, 18px);
 }
 
 * {
@@ -45,12 +45,11 @@ body {
 
 .viewport-stage {
     min-height: 100vh;
-    padding-top: clamp(10px, 1.3vh, 18px);
-    padding-bottom: clamp(12px, 1.6vh, 20px);
+    padding: 16px 0 20px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: clamp(16px, 2.2vh, 26px);
+    justify-content: center;
+    gap: clamp(14px, 1.4vw, 22px);
 }
 
 /* ================= THANH CÔNG CỤ PHÍA TRÊN ================= */
@@ -76,7 +75,7 @@ body {
     align-items: center;
     gap: 10px;
     width: clamp(275px, 26vw, 390px);
-    height: clamp(40px, 4.3vh, 46px);
+    height: clamp(38px, 3.1vw, 46px);
     padding: 0 18px;
     border-radius: 999px;
     border: 1.5px solid rgba(255, 255, 255, 0.92);
@@ -110,7 +109,7 @@ body {
     background: transparent;
     color: #ffffff;
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(13.5px, 1vw, 15px);
+    font-size: clamp(13px, 1vw, 15px);
     font-weight: 700;
     letter-spacing: 0.3px;
     outline: none;
@@ -127,12 +126,12 @@ body {
 }
 
 .btn-toolbar {
-    height: clamp(40px, 4.3vh, 46px);
-    padding: 0 clamp(16px, 1.6vw, 24px);
+    height: clamp(38px, 3.1vw, 46px);
+    padding: 0 clamp(14px, 1.6vw, 24px);
     border-radius: 999px;
     border: 1.5px solid rgba(255, 255, 255, 0.88);
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(13px, 0.98vw, 14.5px);
+    font-size: clamp(12.5px, 0.98vw, 14.5px);
     font-weight: 700;
     color: var(--text-dark);
     cursor: pointer;
@@ -192,13 +191,12 @@ body {
     backdrop-filter: blur(8px);
 }
 
-/* ================= THẺ CHÍNH ================= */
+/* ================= THẺ CHÍNH (CO GIÃN ĐỒNG BỘ MỌI MÀN HÌNH NGANG) ================= */
 .main-card {
-    flex: 1;
     width: 100%;
-    min-height: clamp(600px, 84vh, 830px);
+    height: auto;
     border-radius: var(--card-radius);
-    padding: clamp(20px, 2.3vh, 28px) clamp(22px, 2.4vw, 36px);
+    padding: clamp(12px, 1.8vw, 28px) clamp(14px, 2.4vw, 36px);
     background-color: #fdf7ee;
     background-image:
         url('images/card.png'),
@@ -217,7 +215,7 @@ body {
     flex: 1;
     display: grid;
     grid-template-columns: 0.68fr 1.32fr;
-    gap: clamp(20px, 2.3vw, 34px);
+    gap: clamp(12px, 2.3vw, 34px);
     align-items: stretch;
     position: relative;
     z-index: 2;
@@ -233,7 +231,7 @@ body {
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: clamp(12px, 1.4vh, 18px);
+    gap: clamp(8px, 1.1vw, 16px);
     position: relative;
     z-index: 3;
 }
@@ -241,64 +239,68 @@ body {
 .unit-header-block {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.8vh, 10px);
+    gap: clamp(4px, 0.6vw, 9px);
     flex-shrink: 0;
 }
 
 .unit-code-row {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 1vw, 14px);
-    flex-wrap: wrap;
+    gap: clamp(6px, 1vw, 14px);
+    flex-wrap: nowrap;
 }
 
 .unit-code-label {
-    font-size: clamp(20px, 1.8vw, 27px);
+    font-size: clamp(14px, 1.8vw, 27px);
     font-weight: 700;
     color: var(--text-dark);
     letter-spacing: -0.3px;
+    white-space: nowrap;
 }
 
 .unit-code-pill {
     background-color: var(--pill-orange);
     color: var(--text-dark);
-    font-size: clamp(19px, 1.7vw, 26px);
+    font-size: clamp(13.5px, 1.7vw, 26px);
     font-weight: 800;
-    padding: clamp(4px, 0.4vh, 6px) clamp(18px, 1.8vw, 28px);
+    padding: clamp(2px, 0.35vw, 6px) clamp(11px, 1.8vw, 28px);
     border-radius: 999px;
     letter-spacing: 0.3px;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 .top-meta-list {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    max-width: 280px;
+    gap: clamp(2px, 0.25vw, 4px);
+    max-width: clamp(165px, 19.5vw, 280px);
 }
 
 .top-meta-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 10px;
-    font-size: clamp(12.5px, 0.95vw, 14px);
+    gap: clamp(6px, 0.7vw, 10px);
+    font-size: clamp(9.5px, 0.95vw, 14px);
     color: var(--text-dark);
 }
 
 .top-meta-row span {
     font-weight: 500;
     color: var(--text-muted);
+    white-space: nowrap;
 }
 
 .top-meta-row strong {
     font-weight: 700;
     text-align: right;
+    white-space: nowrap;
 }
 
 .building-3d-card {
-    flex: 1;
-    min-height: clamp(410px, 60vh, 620px);
+    width: 100%;
+    aspect-ratio: 455 / 660;
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -326,8 +328,8 @@ body {
 }
 
 .marker-3d-wrapper .marker-dot {
-    width: clamp(11px, 1vw, 15px);
-    height: clamp(11px, 1vw, 15px);
+    width: clamp(8px, 1vw, 15px);
+    height: clamp(8px, 1vw, 15px);
     background-color: #d92626;
     border: 2px solid #ffffff;
     border-radius: 50%;
@@ -337,11 +339,11 @@ body {
 }
 
 .marker-3d-wrapper .marker-line {
-    width: clamp(28px, 3.2vw, 50px);
+    width: clamp(18px, 3.2vw, 50px);
     height: 2px;
     background-color: #ffffff;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
-    margin-left: -5px;
+    margin-left: -4px;
     flex-shrink: 0;
 }
 
@@ -350,8 +352,8 @@ body {
     color: var(--text-dark);
     border: 1.5px solid #ffffff;
     border-radius: 999px;
-    padding: 2.5px 12px;
-    font-size: clamp(11px, 0.9vw, 13px);
+    padding: clamp(1.5px, 0.2vw, 3px) clamp(7px, 0.85vw, 12px);
+    font-size: clamp(8.5px, 0.9vw, 13px);
     font-weight: 800;
     white-space: nowrap;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
@@ -368,7 +370,7 @@ body {
 
 .marker-3d-wrapper.flip-left .marker-line {
     margin-left: 0;
-    margin-right: -5px;
+    margin-right: -4px;
 }
 
 /* ================= CỘT PHẢI ================= */
@@ -376,7 +378,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: clamp(14px, 1.5vh, 20px);
+    gap: clamp(9px, 1.2vw, 18px);
     position: relative;
     z-index: 2;
 }
@@ -384,7 +386,7 @@ body {
 .floorplan-section {
     position: relative;
     width: 100%;
-    height: clamp(245px, 29vh, 330px);
+    height: clamp(145px, 19vw, 275px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -420,9 +422,9 @@ body {
     display: inline-block;
     background-color: var(--pill-orange);
     color: var(--text-dark);
-    font-size: clamp(11px, 0.9vw, 13px);
+    font-size: clamp(8.5px, 0.9vw, 13px);
     font-weight: 800;
-    padding: 2.5px 14px;
+    padding: clamp(1.5px, 0.2vw, 3px) clamp(8px, 0.95vw, 14px);
     border-radius: 999px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
     white-space: nowrap;
@@ -431,7 +433,7 @@ body {
 .middle-info-grid {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
-    gap: clamp(16px, 1.8vw, 28px);
+    gap: clamp(10px, 1.8vw, 28px);
     align-items: start;
     flex-shrink: 0;
 }
@@ -444,7 +446,7 @@ body {
 .middle-info-grid.no-payment-card .specs-list {
     width: 100%;
     max-width: 100%;
-    gap: clamp(7px, 0.85vh, 11px);
+    gap: clamp(5px, 0.7vw, 11px);
 }
 
 .middle-info-grid.no-payment-card .spec-row {
@@ -461,7 +463,7 @@ body {
 .specs-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.75vh, 10px);
+    gap: clamp(4px, 0.6vw, 10px);
     padding-top: 2px;
 }
 
@@ -469,8 +471,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 12px;
-    font-size: clamp(13px, 1vw, 14.5px);
+    gap: clamp(6px, 0.8vw, 12px);
+    font-size: clamp(9.5px, 1vw, 14.5px);
     line-height: 1.35;
 }
 
@@ -484,43 +486,45 @@ body {
     font-weight: 700;
     color: var(--text-dark);
     text-align: right;
+    white-space: nowrap;
 }
 
 .payment-card {
     background: rgba(255, 255, 255, 0.6);
     border-radius: var(--inner-radius);
-    padding: clamp(12px, 1.3vh, 16px) clamp(14px, 1.4vw, 20px);
+    padding: clamp(8px, 1vw, 16px) clamp(10px, 1.4vw, 20px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
 }
 
 .payment-card-title {
-    font-size: clamp(11.5px, 0.92vw, 13px);
+    font-size: clamp(8.5px, 0.9vw, 13px);
     font-weight: 800;
     color: var(--text-dark);
     text-transform: uppercase;
     letter-spacing: 0.2px;
-    margin-bottom: clamp(8px, 0.9vh, 12px);
+    margin-bottom: clamp(5px, 0.7vw, 12px);
 }
 
 .payment-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.65vh, 9px);
+    gap: clamp(4px, 0.55vw, 9px);
 }
 
 .payment-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    min-height: 28px;
+    gap: clamp(6px, 0.7vw, 10px);
+    min-height: clamp(19px, 1.95vw, 28px);
     position: relative;
 }
 
 .payment-name {
-    font-size: clamp(12.5px, 0.95vw, 14px);
+    font-size: clamp(9px, 0.95vw, 14px);
     font-weight: 600;
     color: var(--text-dark);
+    white-space: nowrap;
 }
 
 .payment-pill-wrap {
@@ -528,21 +532,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    min-width: clamp(132px, 11.5vw, 162px);
-    height: 28px;
+    min-width: clamp(90px, 11.2vw, 162px);
+    height: clamp(19px, 1.95vw, 28px);
 }
 
 .payment-price-pill {
     background: linear-gradient(90deg, var(--pill-orange) 0%, var(--pill-gold) 100%);
     color: var(--text-dark);
-    font-size: clamp(13px, 1.02vw, 15px);
+    font-size: clamp(9.5px, 1.02vw, 15px);
     font-weight: 800;
-    padding: 3px clamp(14px, 1.2vw, 18px);
+    padding: clamp(1.5px, 0.2vw, 3px) clamp(8px, 1.2vw, 18px);
     border-radius: 999px;
     width: 100%;
     text-align: center;
     letter-spacing: 0.2px;
     transition: opacity 0.15s ease;
+    white-space: nowrap;
 }
 
 .payment-row.is-hidden .payment-price-pill {
@@ -553,15 +558,15 @@ body {
 
 .btn-toggle-price {
     position: absolute;
-    top: -4px;
-    right: -5px;
-    width: 17px;
-    height: 17px;
+    top: -3px;
+    right: -4px;
+    width: clamp(13px, 1.18vw, 17px);
+    height: clamp(13px, 1.18vw, 17px);
     border-radius: 50%;
     border: none;
     background-color: #2b241f;
     color: #ffffff;
-    font-size: 11.5px;
+    font-size: clamp(9px, 0.8vw, 11.5px);
     font-weight: 800;
     line-height: 1;
     display: flex;
@@ -586,6 +591,10 @@ body {
     display: none !important;
 }
 
+.exporting-mode .marker-3d-wrapper {
+    transition: none !important;
+}
+
 .main-card.exporting-mode {
     height: auto !important;
     min-height: unset !important;
@@ -596,11 +605,11 @@ body {
     flex: none !important;
 }
 
-/* ================= KHỐI DƯỚI: LAYOUT & DIỄN HỌA (GIỚI HẠN CHIỀU CAO LINH HOẠT) ================= */
+/* ================= KHỐI DƯỚI: LAYOUT & DIỄN HỌA ================= */
 .bottom-media-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(16px, 1.8vw, 24px);
+    gap: clamp(10px, 1.8vw, 24px);
     align-items: stretch;
     flex-shrink: 0;
 }
@@ -608,22 +617,20 @@ body {
 .media-block {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: clamp(4px, 0.5vw, 7px);
 }
 
 .media-title {
-    font-size: clamp(13px, 1vw, 14.5px);
+    font-size: clamp(9.5px, 1vw, 14.5px);
     font-weight: 600;
     color: var(--text-dark);
     flex-shrink: 0;
 }
 
-/* Chiều cao linh động trong khoảng 195px -> tối đa 255px để không bao giờ kéo giãn thẻ quá đà */
 .media-card {
     width: 100%;
-    height: clamp(195px, 24vh, 255px);
-    min-height: 195px;
-    max-height: 255px;
+    height: clamp(122px, 16vw, 232px);
+    max-height: 232px;
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -639,7 +646,7 @@ body {
 
 .layout-card {
     background-color: #ffffff;
-    padding: clamp(8px, 0.9vw, 12px);
+    padding: clamp(6px, 0.8vw, 12px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -668,11 +675,8 @@ body {
     pointer-events: none;
 }
 
-/* Khóa trần chiều cao khung Layout & Diễn họa khi xuất ảnh PNG */
 .exporting-mode .media-card {
-    height: 245px !important;
-    min-height: 245px !important;
-    max-height: 245px !important;
+    max-height: 232px !important;
 }
 
 .zoom-hint-badge {
