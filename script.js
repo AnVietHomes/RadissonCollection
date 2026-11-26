@@ -577,16 +577,16 @@ function update3DBuildingMarker(row, unitCode) {
 }
 
 // =========================================================================
-// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (ĐỌC ĐỦ ID, DATA-NAME, TITLE & MỞ LỚP ẨN)
+// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (HỖ TRỢ MÃ HEX 2 & 4 CHỮ SỐ CỦA ILLUSTRATOR)
 // =========================================================================
 function decodeIllustratorId(rawStr) {
     if (!rawStr) return '';
-    // Giải mã các ký tự hex do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_1 -> 11, _x0031_2A -> 12A)
-    let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{4})_/g, (_, hex) =>
+    // Giải mã cả hex 2 chữ số (_x30_1 -> 01, _x31_2A -> 12A) và hex 4 chữ số (_x0030_1 -> 01) của Illustrator
+    let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{2,4})_/g, (_, hex) =>
         String.fromCharCode(parseInt(hex, 16))
     );
-    // Loại bỏ hậu tố trùng lặp của Illustrator (_1_, _2_, _0000001234567890123456789_, _1) và dấu gạch dưới đầu
-    decoded = decoded.replace(/_\d+_?$/, '').replace(/^_+/, '');
+    // Loại bỏ hậu tố trùng lặp của Illustrator (_1_, _00000123..._, -2) và dấu gạch dưới đầu
+    decoded = decoded.replace(/_\d+_?$/, '').replace(/-\d+$/, '').replace(/^_+/, '');
     return decoded.trim().toUpperCase();
 }
 
@@ -600,6 +600,22 @@ function normalizePaddedAxis(rawAxis) {
         return `${padded}${match[2]}`;
     }
     return decoded;
+}
+
+function isInsideBgGroup(el, svgRoot) {
+    let curr = el;
+    while (curr && curr !== svgRoot) {
+        if (curr.tagName && curr.tagName.toLowerCase() === 'defs') return true;
+        const names = [
+            curr.getAttribute && curr.getAttribute('id'),
+            curr.getAttribute && curr.getAttribute('data-name')
+        ].filter(Boolean);
+        for (const n of names) {
+            if (decodeIllustratorId(n) === 'BG') return true;
+        }
+        curr = curr.parentElement;
+    }
+    return false;
 }
 
 // Trích xuất mã trục căn từ mọi kiểu đặt tên trong Illustrator (id, data-name, inkscape:label, <title>)
@@ -640,23 +656,21 @@ function extractAxisTokenFromElement(el) {
 }
 
 function clearSvgUnitStyle(el) {
-    el.style.setProperty('opacity', '0', 'important');
-    el.style.setProperty('fill', 'transparent', 'important');
-    el.style.setProperty('stroke', 'transparent', 'important');
-    el.style.removeProperty('mix-blend-mode');
-    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(child => {
-        child.style.setProperty('opacity', '0', 'important');
-        child.style.setProperty('fill', 'transparent', 'important');
-        child.style.setProperty('stroke', 'transparent', 'important');
-        child.style.removeProperty('mix-blend-mode');
-    });
+    const hideNode = node => {
+        node.style.setProperty('opacity', '0', 'important');
+        node.style.setProperty('fill', 'transparent', 'important');
+        node.style.setProperty('stroke', 'transparent', 'important');
+        node.style.removeProperty('mix-blend-mode');
+    };
+    hideNode(el);
+    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(hideNode);
 }
 
 function highlightSvgUnitStyle(el, svgRoot) {
     const highlightFill = '#eb4d24';
     const highlightStroke = '#c92a14';
 
-    // Mở hiển thị mọi thẻ cha <g> nếu trong Illustrator từng tắt con mắt (display="none" / visibility="hidden")
+    // Mở hiển thị mọi thẻ cha <g> nếu trong Illustrator từng tắt con mắt
     let parent = el.parentElement;
     let topContainer = el;
     while (parent && parent !== svgRoot) {
@@ -677,27 +691,20 @@ function highlightSvgUnitStyle(el, svgRoot) {
         svgRoot.appendChild(topContainer);
     }
 
-    el.removeAttribute('display');
-    el.style.setProperty('opacity', '1', 'important');
-    el.style.setProperty('display', 'inline', 'important');
-    el.style.setProperty('visibility', 'visible', 'important');
-    el.style.setProperty('fill', highlightFill, 'important');
-    el.style.setProperty('fill-opacity', '0.78', 'important');
-    el.style.setProperty('stroke', highlightStroke, 'important');
-    el.style.setProperty('stroke-width', '1.5px', 'important');
-    el.style.setProperty('mix-blend-mode', 'multiply', 'important');
+    const applyHighlight = node => {
+        node.removeAttribute('display');
+        node.style.setProperty('opacity', '1', 'important');
+        node.style.setProperty('display', 'inline', 'important');
+        node.style.setProperty('visibility', 'visible', 'important');
+        node.style.setProperty('fill', highlightFill, 'important');
+        node.style.setProperty('fill-opacity', '0.55', 'important');
+        node.style.setProperty('stroke', highlightStroke, 'important');
+        node.style.setProperty('stroke-width', '1.5px', 'important');
+        node.style.setProperty('mix-blend-mode', 'normal', 'important');
+    };
 
-    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(child => {
-        child.removeAttribute('display');
-        child.style.setProperty('opacity', '1', 'important');
-        child.style.setProperty('display', 'inline', 'important');
-        child.style.setProperty('visibility', 'visible', 'important');
-        child.style.setProperty('fill', highlightFill, 'important');
-        child.style.setProperty('fill-opacity', '0.78', 'important');
-        child.style.setProperty('stroke', highlightStroke, 'important');
-        child.style.setProperty('stroke-width', '1.5px', 'important');
-        child.style.setProperty('mix-blend-mode', 'multiply', 'important');
-    });
+    applyHighlight(el);
+    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(applyHighlight);
 }
 
 function updateFloorPlanSVG(row, unitCode) {
@@ -742,9 +749,7 @@ function updateFloorPlanSVG(row, unitCode) {
             const allElements = svgEl.querySelectorAll('g, polygon, path, rect, polyline');
 
             allElements.forEach(el => {
-                if (el.closest('#bg') || el.closest('#BG') || el.closest('[data-name="bg"]') || el.closest('[data-name="BG"]') || el.closest('defs')) {
-                    return;
-                }
+                if (isInsideBgGroup(el, svgEl)) return;
 
                 const axisToken = extractAxisTokenFromElement(el);
                 if (axisToken) {
@@ -766,11 +771,6 @@ function updateFloorPlanSVG(row, unitCode) {
                 activeHighlightedSvgEl = matched.el;
                 requestAnimationFrame(() => positionSvgCallout(matched.el));
                 setTimeout(() => positionSvgCallout(matched.el), 120);
-            } else {
-                console.warn(
-                    `[Radisson SVG] Không tìm thấy poly căn "${targetFromStt || targetFromCode}" trong ${svgFileName}. Các poly tìm thấy:`,
-                    unitCandidates.map(c => c.axisToken)
-                );
             }
         })
         .catch(() => {
