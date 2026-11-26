@@ -196,9 +196,9 @@ body {
 .main-card {
     flex: 1;
     width: 100%;
-    min-height: clamp(620px, 86vh, 860px);
+    min-height: clamp(600px, 84vh, 830px);
     border-radius: var(--card-radius);
-    padding: clamp(20px, 2.4vh, 30px) clamp(22px, 2.4vw, 36px);
+    padding: clamp(20px, 2.3vh, 28px) clamp(22px, 2.4vw, 36px);
     background-color: #fdf7ee;
     background-image:
         url('images/card.png'),
@@ -298,7 +298,7 @@ body {
 
 .building-3d-card {
     flex: 1;
-    min-height: clamp(420px, 64vh, 660px);
+    min-height: clamp(410px, 60vh, 620px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -310,6 +310,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
     pointer-events: none;
 }
@@ -375,7 +376,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: clamp(14px, 1.6vh, 22px);
+    gap: clamp(14px, 1.5vh, 20px);
     position: relative;
     z-index: 2;
 }
@@ -383,7 +384,7 @@ body {
 .floorplan-section {
     position: relative;
     width: 100%;
-    height: clamp(255px, 31vh, 350px);
+    height: clamp(245px, 29vh, 330px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -432,6 +433,7 @@ body {
     grid-template-columns: 0.95fr 1.05fr;
     gap: clamp(16px, 1.8vw, 28px);
     align-items: start;
+    flex-shrink: 0;
 }
 
 .middle-info-grid.no-payment-card {
@@ -594,12 +596,13 @@ body {
     flex: none !important;
 }
 
+/* ================= KHỐI DƯỚI: LAYOUT & DIỄN HỌA (GIỚI HẠN CHIỀU CAO LINH HOẠT) ================= */
 .bottom-media-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(16px, 1.8vw, 24px);
-    flex: 1;
     align-items: stretch;
+    flex-shrink: 0;
 }
 
 .media-block {
@@ -615,10 +618,12 @@ body {
     flex-shrink: 0;
 }
 
+/* Chiều cao linh động trong khoảng 195px -> tối đa 255px để không bao giờ kéo giãn thẻ quá đà */
 .media-card {
-    flex: 1;
     width: 100%;
-    min-height: clamp(190px, 24vh, 265px);
+    height: clamp(195px, 24vh, 255px);
+    min-height: 195px;
+    max-height: 255px;
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -634,15 +639,17 @@ body {
 
 .layout-card {
     background-color: #ffffff;
-    padding: clamp(8px, 1vw, 14px);
+    padding: clamp(8px, 0.9vw, 12px);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .layout-card img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     display: block;
     pointer-events: none;
@@ -656,8 +663,16 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
     pointer-events: none;
+}
+
+/* Khóa trần chiều cao khung Layout & Diễn họa khi xuất ảnh PNG */
+.exporting-mode .media-card {
+    height: 245px !important;
+    min-height: 245px !important;
+    max-height: 245px !important;
 }
 
 .zoom-hint-badge {
