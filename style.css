@@ -31,26 +31,27 @@ body {
     background-attachment: fixed;
     color: var(--text-dark);
     min-height: 100vh;
-    padding: 0 clamp(14px, 2.2vw, 32px) 24px;
+    padding: 0 clamp(14px, 2vw, 30px) 24px;
     overflow-x: hidden;
 }
 
 .app-wrapper {
     width: 100%;
-    max-width: 1380px;
+    max-width: 1460px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
 }
 
-/* KHUNG ĐẦU TRANG: CỤM TÌM KIẾM + NÚT BẤM + CARD VỪA KHÍT TRỌN 1 MÀN HÌNH */
+/* KHUNG ĐẦU TRANG: THANH TÌM KIẾM NẰM SÁT TRÊN, THẺ THÔNG TIN NÂNG CAO VỪA TRỌN MÀN HÌNH */
 .viewport-stage {
     min-height: 100vh;
-    padding: clamp(10px, 1.2vh, 18px) 0;
+    padding-top: clamp(10px, 1.3vh, 18px);
+    padding-bottom: clamp(12px, 1.6vh, 20px);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: clamp(12px, 1.3vh, 18px);
+    justify-content: flex-start;
+    gap: clamp(16px, 2.2vh, 26px);
 }
 
 /* ================= THANH CÔNG CỤ PHÍA TRÊN ================= */
@@ -60,6 +61,7 @@ body {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .toolbar-left,
@@ -74,8 +76,8 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: clamp(260px, 25vw, 360px);
-    height: clamp(40px, 4.4vh, 46px);
+    width: clamp(265px, 25vw, 370px);
+    height: clamp(40px, 4.3vh, 46px);
     padding: 0 18px;
     border-radius: 999px;
     border: 1.5px solid rgba(255, 255, 255, 0.92);
@@ -126,7 +128,7 @@ body {
 }
 
 .btn-toolbar {
-    height: clamp(40px, 4.4vh, 46px);
+    height: clamp(40px, 4.3vh, 46px);
     padding: 0 clamp(16px, 1.6vw, 24px);
     border-radius: 999px;
     border: 1.5px solid rgba(255, 255, 255, 0.88);
@@ -176,11 +178,13 @@ body {
     backdrop-filter: blur(8px);
 }
 
-/* ================= THẺ CHÍNH (PHÓNG TO VỪA KHÍT MÀN HÌNH) ================= */
+/* ================= THẺ CHÍNH (CHIỀU CAO NÂNG CAO ĐỂ ẢNH & LAYOUT RỘNG RÃI) ================= */
 .main-card {
+    flex: 1;
     width: 100%;
+    min-height: clamp(620px, 86vh, 860px);
     border-radius: var(--card-radius);
-    padding: clamp(18px, 2.2vh, 28px) clamp(20px, 2.4vw, 34px);
+    padding: clamp(20px, 2.4vh, 30px) clamp(22px, 2.4vw, 36px);
     background-color: #fdf7ee;
     background-image:
         url('images/card.png'),
@@ -191,37 +195,32 @@ body {
     box-shadow: 0 20px 50px rgba(45, 22, 10, 0.24);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-grid {
+    flex: 1;
     display: grid;
-    grid-template-columns: 0.72fr 1.28fr;
-    gap: clamp(18px, 2.2vw, 32px);
+    grid-template-columns: 0.68fr 1.32fr;
+    gap: clamp(20px, 2.3vw, 34px);
     align-items: stretch;
     position: relative;
     z-index: 2;
 }
 
-/* TRẠNG THÁI BAN ĐẦU: CHỈ HIỆN DUY NHẤT ẢNH TÒA NHÀ */
-.main-card.is-empty-state .card-grid {
-    grid-template-columns: minmax(320px, 500px);
-    justify-content: center;
-}
-
+/* TRẠNG THÁI BAN ĐẦU: GIỮ NGUYÊN BỐ CỤC 2 CỘT, ẢNH TÒA NHÀ NẰM ĐÚNG VỊ TRÍ CỘT TRÁI */
 .main-card.is-empty-state .unit-header-block,
 .main-card.is-empty-state .right-column {
-    display: none !important;
-}
-
-.main-card.is-empty-state .building-3d-card {
-    height: clamp(460px, 76vh, 690px);
+    visibility: hidden;
+    pointer-events: none;
 }
 
 /* ================= CỘT TRÁI ================= */
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: clamp(12px, 1.3vh, 16px);
+    gap: clamp(12px, 1.4vh, 18px);
     position: relative;
     z-index: 3;
 }
@@ -230,6 +229,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: clamp(6px, 0.8vh, 10px);
+    flex-shrink: 0;
 }
 
 .unit-code-row {
@@ -261,7 +261,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    max-width: 270px;
+    max-width: 280px;
 }
 
 .top-meta-row {
@@ -283,10 +283,10 @@ body {
     text-align: right;
 }
 
-/* KHUNG PHỐI CẢNH 3D TÒA NHÀ */
+/* KHUNG PHỐI CẢNH 3D TÒA NHÀ (CAO HƠN THEO CHIỀU CAO THẺ) */
 .building-3d-card {
     flex: 1;
-    min-height: clamp(340px, 56vh, 540px);
+    min-height: clamp(420px, 64vh, 660px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -364,19 +364,20 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: clamp(12px, 1.3vh, 18px);
+    gap: clamp(14px, 1.6vh, 22px);
     position: relative;
     z-index: 2;
 }
 
-/* MẶT BẰNG TẦNG SVG: TO HƠN & CĂN GIỮA TRỰC TIẾP TRÊN 2 ẢNH LAYOUT VÀ DIỄN HỌA */
+/* MẶT BẰNG TẦNG SVG: TĂNG SIZE TO RÕ & CĂN GIỮA TRỰC TIẾP TRÊN 2 ẢNH BÊN DƯỚI */
 .floorplan-section {
     position: relative;
     width: 100%;
-    height: clamp(210px, 25vh, 280px);
+    height: clamp(255px, 31vh, 350px);
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .svg-container {
@@ -424,18 +425,33 @@ body {
     align-items: start;
 }
 
+/* KHI KHÔNG CÓ BẢNG GIÁ PTTT: CỤM TEXT THÔNG TIN CĂN ĐỀU 100% CHIỀU RỘNG CỦA 2 ẢNH BÊN DƯỚI */
 .middle-info-grid.no-payment-card {
     grid-template-columns: 1fr;
+    width: 100%;
 }
 
 .middle-info-grid.no-payment-card .specs-list {
-    max-width: 480px;
+    width: 100%;
+    max-width: 100%;
+    gap: clamp(7px, 0.85vh, 11px);
+}
+
+.middle-info-grid.no-payment-card .spec-row {
+    width: 100%;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed rgba(24, 21, 18, 0.1);
+}
+
+.middle-info-grid.no-payment-card .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .specs-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.7vh, 10px);
+    gap: clamp(6px, 0.75vh, 10px);
     padding-top: 2px;
 }
 
@@ -563,28 +579,32 @@ body {
     display: none !important;
 }
 
-/* KHỐI DƯỚI: LAYOUT NỘI THẤT & DIỄN HỌA NỘI THẤT */
+/* KHỐI DƯỚI: LAYOUT NỘI THẤT & DIỄN HỌA NỘI THẤT (CAO HƠN ĐỂ LAYOUT KHÔNG BỊ HẸP) */
 .bottom-media-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(16px, 1.8vw, 24px);
+    flex: 1;
+    align-items: stretch;
 }
 
 .media-block {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
 }
 
 .media-title {
     font-size: clamp(13px, 1vw, 14.5px);
     font-weight: 600;
     color: var(--text-dark);
+    flex-shrink: 0;
 }
 
 .media-card {
+    flex: 1;
     width: 100%;
-    height: clamp(145px, 18.5vh, 200px);
+    min-height: clamp(190px, 24vh, 265px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -600,7 +620,7 @@ body {
 
 .layout-card {
     background-color: #ffffff;
-    padding: clamp(8px, 0.9vw, 12px);
+    padding: clamp(8px, 1vw, 14px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -707,7 +727,7 @@ body {
 
 /* ================= CHÂN TRANG (NẰM DƯỚI MÀN HÌNH ĐẦU, KÉO XUỐNG MỚI THẤY) ================= */
 .site-footer {
-    padding: 20px 12px 12px;
+    padding: 22px 12px 12px;
     text-align: center;
     display: flex;
     flex-direction: column;
