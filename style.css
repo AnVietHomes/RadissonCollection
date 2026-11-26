@@ -570,13 +570,23 @@ body {
     background-color: #000000;
 }
 
-/* TRẠNG THÁI KHI XUẤT ẢNH: ẨN TOÀN BỘ NÚT (+/-) VÀ ẨN HẲN CÁC DÒNG ĐANG TẮT */
+/* TRẠNG THÁI KHI XUẤT ẢNH: ẨN TOÀN BỘ NÚT (+/-) VÀ ẨN HẲN CÁC DÒNG ĐANG TẮT, KÉO DÀI THẺ XUỐNG CHO WATERMARK */
 .exporting-mode .btn-toggle-price {
     display: none !important;
 }
 
 .exporting-mode .payment-row.is-hidden {
     display: none !important;
+}
+
+.main-card.exporting-mode {
+    height: auto !important;
+    min-height: unset !important;
+    padding-bottom: 20px !important;
+}
+
+.main-card.exporting-mode .card-grid {
+    flex: none !important;
 }
 
 /* KHỐI DƯỚI: LAYOUT NỘI THẤT & DIỄN HỌA NỘI THẤT (CAO HƠN ĐỂ LAYOUT KHÔNG BỊ HẸP) */
@@ -679,50 +689,52 @@ body {
 }
 
 /* ================= WATERMARK KHI TẢI ẢNH ================= */
-.export-watermark {
+.watermark-overlay-center {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 30;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-}
-
-.watermark-center {
-    margin: auto 0;
-    display: flex;
     justify-content: space-around;
     align-items: center;
-    opacity: 0.14;
+    padding: 0 36px;
+    opacity: 0.11;
 }
 
-.watermark-center img {
-    height: 58px;
+.watermark-overlay-center img {
+    height: 54px;
+    width: auto;
     object-fit: contain;
 }
 
-.watermark-footer {
+/* DẢI CHÂN WATERMARK NẰM DƯỚI CÙNG CỦA THẺ (TỰ ĐỘNG KÉO DÀI THẺ XUỐNG DƯỚI, KHÔNG ĐÈ ẢNH/TEXT) */
+.watermark-footer-bar {
+    position: relative;
+    z-index: 31;
+    width: 100%;
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(24, 21, 18, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(24, 21, 18, 0.15);
-    opacity: 0.85;
+    gap: 14px;
+    flex-shrink: 0;
 }
 
-.watermark-footer img {
-    height: 18px;
+.watermark-footer-bar img {
+    height: 22px;
+    width: auto;
     object-fit: contain;
+    display: block;
 }
 
-.watermark-footer span {
-    font-size: 11px;
+.watermark-footer-bar span {
+    font-size: 11.5px;
     font-weight: 800;
-    letter-spacing: 1.3px;
+    letter-spacing: 1.4px;
     color: var(--text-dark);
+    line-height: 1.2;
 }
 
 /* ================= CHÂN TRANG (NẰM DƯỚI MÀN HÌNH ĐẦU, KÉO XUỐNG MỚI THẤY) ================= */
