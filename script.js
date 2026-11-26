@@ -19,6 +19,7 @@ const CONFIG = {
 let apartmentData = [];
 let hiddenPaymentsState = {};
 let activeHighlightedSvgEl = null;
+let preloadedLogoDataUrl = null;
 
 // =========================================================================
 // 1. TẢI VÀ PHÂN TÍCH DỮ LIỆU CSV (KHÔNG TỰ ĐỘNG HIỆN CĂN NÀO KHI MỚI VÀO WEB)
@@ -27,6 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupSearchInputEvents();
     setupLightboxEvents();
     initSourceProtection();
+    preloadWatermarkLogo();
 
     fetch(`${CONFIG.DATA_FILE}?v=${Date.now()}`)
         .then(res => {
@@ -50,6 +52,53 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 });
+
+// Chuyển sẵn images/logo.svg sang PNG Data URL để html2canvas luôn hiển thị đầy đủ logo watermark
+function preloadWatermarkLogo() {
+    fetch('images/logo.svg')
+        .then(res => res.text())
+        .then(svgText => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(svgText, 'image/svg+xml');
+            const svgEl = doc.querySelector('svg');
+            if (!svgEl) return;
+
+            let w = 240;
+            let h = 60;
+            const vb = svgEl.getAttribute('viewBox');
+            if (vb) {
+                const parts = vb.trim().split(/[\s,]+/).map(Number);
+                if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+                    const ratio = parts[2] / parts[3];
+                    h = 120;
+                    w = Math.round(h * ratio);
+                }
+            }
+            svgEl.setAttribute('width', `${w}px`);
+            svgEl.setAttribute('height', `${h}px`);
+
+            const serialized = new XMLSerializer().serializeToString(svgEl);
+            const svgBlob = new Blob([serialized], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                preloadedLogoDataUrl = canvas.toDataURL('image/png');
+                URL.revokeObjectURL(url);
+
+                document.querySelectorAll('.wm-logo-img').forEach(el => {
+                    el.src = preloadedLogoDataUrl;
+                });
+            };
+            img.src = url;
+        })
+        .catch(() => {});
+}
 
 // Tự động căn lại nhãn mã căn trên SVG khi thay đổi kích thước cửa sổ
 window.addEventListener('resize', () => {
@@ -177,7 +226,7 @@ function padUnitSegment(seg) {
     return `${numPart}${m[2]}`;
 }
 
-// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn (hỗ trợ cả tầng 2 số, 3 số + chữ như 12A, 12B, 102A và căn 03A, 12A...)
+// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn
 function normalizeUnitCode(input) {
     let clean = String(input || '').trim().toUpperCase().replace(/[-_,\s]+/g, '.');
     if (!clean) return '';
@@ -528,20 +577,20 @@ function update3DBuildingMarker(row, unitCode) {
 }
 
 // =========================================================================
-// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (GIẢI MÃ CHUẨN ID ILLUSTRATOR & MỞ LỚP ẨN)
+// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (ĐỌC ĐỦ ID, DATA-NAME, TITLE & MỞ LỚP ẨN)
 // =========================================================================
 function decodeIllustratorId(rawStr) {
     if (!rawStr) return '';
-    // Giải mã các ký tự hex do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_0 -> 10, _x0031_2A -> 12A)
+    // Giải mã các ký tự hex do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_1 -> 11, _x0031_2A -> 12A)
     let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{4})_/g, (_, hex) =>
         String.fromCharCode(parseInt(hex, 16))
     );
-    // Loại bỏ hậu tố trùng lặp nếu có (_1_, _2_, _000000123..._, _1) và dấu gạch dưới đầu
+    // Loại bỏ hậu tố trùng lặp của Illustrator (_1_, _2_, _0000001234567890123456789_, _1) và dấu gạch dưới đầu
     decoded = decoded.replace(/_\d+_?$/, '').replace(/^_+/, '');
     return decoded.trim().toUpperCase();
 }
 
-// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '10' -> '10', '12A' -> '12A')
+// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '11' -> '11', '12A' -> '12A')
 function normalizePaddedAxis(rawAxis) {
     const decoded = decodeIllustratorId(rawAxis).replace(/[^A-Z0-9]/g, '');
     const match = decoded.match(/^0*(\d+)([A-Z]?)$/);
@@ -551,6 +600,43 @@ function normalizePaddedAxis(rawAxis) {
         return `${padded}${match[2]}`;
     }
     return decoded;
+}
+
+// Trích xuất mã trục căn từ mọi kiểu đặt tên trong Illustrator (id, data-name, inkscape:label, <title>)
+function extractAxisTokenFromElement(el) {
+    const directTitleEl = Array.from(el.children || []).find(
+        c => c.tagName && c.tagName.toLowerCase() === 'title'
+    );
+    const rawNames = [
+        el.getAttribute('data-name'),
+        el.getAttribute('id'),
+        el.getAttribute('inkscape:label'),
+        directTitleEl ? directTitleEl.textContent : ''
+    ].filter(Boolean);
+
+    for (const rawName of rawNames) {
+        const decoded = decodeIllustratorId(rawName);
+        if (!decoded || decoded === 'LAYER_1' || decoded === 'LAYER1' || decoded === 'BG') continue;
+
+        // 1. Khớp trực tiếp tên layer/path: 01, 02, 03A, 06A, 10, 11, 12A, 12B, 15...
+        if (/^\d{1,2}[A-Z]?$/.test(decoded)) {
+            return normalizePaddedAxis(decoded);
+        }
+
+        // 2. Khớp có tiền tố tiếng Việt/Anh: CĂN 11, CAN_11, CAN-03A, CH11, P11, UNIT_11...
+        const prefixMatch = decoded.match(/^(?:CĂN|CAN|CH|UNIT|APT|P|NO)[_\-.\s]*(\d{1,2}[A-Z]?)$/);
+        if (prefixMatch) {
+            return normalizePaddedAxis(prefixMatch[1]);
+        }
+
+        // 3. Khớp đầy đủ mã căn: R.07.11, R_12B_03A, 07.11...
+        const fullMatch = decoded.match(/^(?:R[.\-_\s]*)?\d{1,2}[A-Z]?[.\-_\s]+(\d{1,2}[A-Z]?)$/);
+        if (fullMatch) {
+            return normalizePaddedAxis(fullMatch[1]);
+        }
+    }
+
+    return '';
 }
 
 function clearSvgUnitStyle(el) {
@@ -570,17 +656,28 @@ function highlightSvgUnitStyle(el, svgRoot) {
     const highlightFill = '#eb4d24';
     const highlightStroke = '#c92a14';
 
-    // Nếu nhóm cha trong Illustrator bị ẩn (display="none"), mở hiển thị các thẻ <g> cha
+    // Mở hiển thị mọi thẻ cha <g> nếu trong Illustrator từng tắt con mắt (display="none" / visibility="hidden")
     let parent = el.parentElement;
+    let topContainer = el;
     while (parent && parent !== svgRoot) {
         if (parent.tagName && parent.tagName.toLowerCase() === 'g') {
+            parent.removeAttribute('display');
             parent.style.setProperty('display', 'inline', 'important');
             parent.style.setProperty('visibility', 'visible', 'important');
             parent.style.setProperty('opacity', '1', 'important');
+            if (parent.parentElement === svgRoot) {
+                topContainer = parent;
+            }
         }
         parent = parent.parentElement;
     }
 
+    // Đưa phần tử căn được tô màu lên lớp trên cùng của SVG để chắc chắn nằm trên layer bg
+    if (topContainer && topContainer.parentElement === svgRoot) {
+        svgRoot.appendChild(topContainer);
+    }
+
+    el.removeAttribute('display');
     el.style.setProperty('opacity', '1', 'important');
     el.style.setProperty('display', 'inline', 'important');
     el.style.setProperty('visibility', 'visible', 'important');
@@ -591,6 +688,7 @@ function highlightSvgUnitStyle(el, svgRoot) {
     el.style.setProperty('mix-blend-mode', 'multiply', 'important');
 
     el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(child => {
+        child.removeAttribute('display');
         child.style.setProperty('opacity', '1', 'important');
         child.style.setProperty('display', 'inline', 'important');
         child.style.setProperty('visibility', 'visible', 'important');
@@ -632,7 +730,7 @@ function updateFloorPlanSVG(row, unitCode) {
             svgEl.style.height = '100%';
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A, 10 -> 10) và dự phòng đuôi Mã căn hộ (VD: R.12B.03A -> 03A)
+            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A, 11 -> 11) và dự phòng đuôi Mã căn hộ (VD: R.07.11 -> 11)
             const sttRaw = getCol(row, ['stt căn', 'stt']);
             const codeParts = unitCode.split('.');
             const codeSuffixRaw = codeParts.length >= 3 ? codeParts[2] : '';
@@ -644,34 +742,14 @@ function updateFloorPlanSVG(row, unitCode) {
             const allElements = svgEl.querySelectorAll('g, polygon, path, rect, polyline');
 
             allElements.forEach(el => {
-                if (el.closest('#bg') || el.closest('#BG') || el.closest('defs')) return;
+                if (el.closest('#bg') || el.closest('#BG') || el.closest('[data-name="bg"]') || el.closest('[data-name="BG"]') || el.closest('defs')) {
+                    return;
+                }
 
-                const rawIdentifier = el.getAttribute('id') || el.getAttribute('data-name') || el.getAttribute('inkscape:label') || '';
-                if (!rawIdentifier) return;
-
-                const decoded = decodeIllustratorId(rawIdentifier);
-                if (!decoded || decoded === 'LAYER_1' || decoded === 'LAYER1' || decoded === 'BG') return;
-
-                // Khớp tên poly: 01, 02, 03A, 06A, 10, 12A, 12B, 15... (hoặc CAN_01, R.07.01)
-                const isDirectAxis = /^\d{1,2}[A-Z]?$/.test(decoded);
-                const isCanPrefixed = /^CAN[_\-.]?\d{1,2}[A-Z]?$/.test(decoded);
-                const isFullUnit = /^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?\d{1,2}[A-Z]?$/.test(decoded);
-
-                if (isDirectAxis || isCanPrefixed || isFullUnit) {
-                    let axisToken = '';
-                    if (isDirectAxis) {
-                        axisToken = normalizePaddedAxis(decoded);
-                    } else if (isCanPrefixed) {
-                        axisToken = normalizePaddedAxis(decoded.replace(/^CAN[_\-.]?/, ''));
-                    } else if (isFullUnit) {
-                        const m = decoded.match(/^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?(\d{1,2}[A-Z]?)$/);
-                        axisToken = m ? normalizePaddedAxis(m[1]) : '';
-                    }
-
-                    if (axisToken) {
-                        clearSvgUnitStyle(el);
-                        unitCandidates.push({ el, axisToken });
-                    }
+                const axisToken = extractAxisTokenFromElement(el);
+                if (axisToken) {
+                    clearSvgUnitStyle(el);
+                    unitCandidates.push({ el, axisToken });
                 }
             });
 
@@ -688,6 +766,11 @@ function updateFloorPlanSVG(row, unitCode) {
                 activeHighlightedSvgEl = matched.el;
                 requestAnimationFrame(() => positionSvgCallout(matched.el));
                 setTimeout(() => positionSvgCallout(matched.el), 120);
+            } else {
+                console.warn(
+                    `[Radisson SVG] Không tìm thấy poly căn "${targetFromStt || targetFromCode}" trong ${svgFileName}. Các poly tìm thấy:`,
+                    unitCandidates.map(c => c.axisToken)
+                );
             }
         })
         .catch(() => {
@@ -782,31 +865,42 @@ function updateMediaCards(row) {
 }
 
 // =========================================================================
-// 8. XUẤT ẢNH BÁO GIÁ (GIỮ ĐÚNG TRẠNG THÁI ẨN/HIỆN PTTT)
+// 8. XUẤT ẢNH BÁO GIÁ (KÉO DÀI THẺ XUỐNG DƯỚI ĐỂ CHỨA WATERMARK, KHÔNG ĐÈ ẢNH/TEXT)
 // =========================================================================
 function exportImage() {
     const container = document.getElementById('exportContainer');
-    const watermark = document.getElementById('watermarkSystem');
+    const wmCenter = document.getElementById('watermarkOverlayCenter');
+    const wmFooter = document.getElementById('watermarkFooterBar');
     const unitCode = document.getElementById('lblMaCanTop').innerText.trim() || 'BaoGia';
 
-    container.classList.add('exporting-mode');
-    watermark.style.display = 'flex';
-
-    html2canvas(container, {
-        useCORS: true,
-        scale: 2,
-        backgroundColor: null
-    })
-        .then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Radisson_${unitCode.replace(/\./g, '_')}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        })
-        .finally(() => {
-            watermark.style.display = 'none';
-            container.classList.remove('exporting-mode');
+    if (preloadedLogoDataUrl) {
+        document.querySelectorAll('.wm-logo-img').forEach(el => {
+            el.src = preloadedLogoDataUrl;
         });
+    }
+
+    container.classList.add('exporting-mode');
+    if (wmCenter) wmCenter.style.display = 'flex';
+    if (wmFooter) wmFooter.style.display = 'flex';
+
+    requestAnimationFrame(() => {
+        html2canvas(container, {
+            useCORS: true,
+            scale: 2,
+            backgroundColor: null
+        })
+            .then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Radisson_${unitCode.replace(/\./g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            })
+            .finally(() => {
+                if (wmCenter) wmCenter.style.display = 'none';
+                if (wmFooter) wmFooter.style.display = 'none';
+                container.classList.remove('exporting-mode');
+            });
+    });
 }
 
 // =========================================================================
