@@ -299,8 +299,9 @@ body {
 }
 
 .building-3d-card {
+    flex: 1;
     width: 100%;
-    aspect-ratio: 455 / 660;
+    min-height: clamp(395px, 47.2vw, 690px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
