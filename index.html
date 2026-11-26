@@ -26,16 +26,17 @@
         <div class="toolbar-left">
             <div class="search-pill">
                 <button type="button" class="search-icon-btn" onclick="searchApartment()" title="Tra cứu mã căn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
-                <input type="text" id="searchInput" placeholder="Nhập mã căn: Ví dụ R.12.13" autocomplete="off" spellcheck="false">
+                <input type="text" id="searchInput" list="unitCodeList" placeholder="Nhập mã căn: Ví dụ R.12.13" autocomplete="off" spellcheck="false">
+                <datalist id="unitCodeList"></datalist>
             </div>
 
             <button type="button" class="btn-toolbar btn-export" onclick="exportImage()" title="Tải xuống ảnh báo giá chất lượng cao">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -64,7 +65,7 @@
                 <div class="unit-header-block">
                     <div class="unit-code-row">
                         <span class="unit-code-label">Mã căn:</span>
-                        <span id="lblMaCanTop" class="unit-code-pill">R.17.08</span>
+                        <span id="lblMaCanTop" class="unit-code-pill">---</span>
                     </div>
                     <div id="topMetaContainer" class="top-meta-list"></div>
                 </div>
@@ -77,7 +78,7 @@
                     <div id="marker3DWrapper" class="marker-3d-wrapper" style="display: none;">
                         <span class="marker-dot"></span>
                         <span class="marker-line"></span>
-                        <span id="lblMaCan3D" class="marker-pill">R.17.08</span>
+                        <span id="lblMaCan3D" class="marker-pill">---</span>
                     </div>
                 </div>
             </section>
@@ -90,15 +91,15 @@
                         <div class="image-placeholder">Nhập mã căn để hiển thị mặt bằng tầng</div>
                     </div>
                     <div id="svgCalloutBadge" class="svg-callout-badge" style="display: none;">
-                        <span id="lblMaCanSvg" class="svg-callout-pill">R.17.08</span>
+                        <span id="lblMaCanSvg" class="svg-callout-pill">---</span>
                     </div>
                 </div>
 
                 <!-- KHU VỰC 2: THÔNG SỐ CHI TIẾT & GIÁ BÁN THEO PTTT -->
-                <div class="middle-info-grid">
+                <div id="middleInfoGrid" class="middle-info-grid no-payment-card">
                     <div id="infoSpecsList" class="specs-list"></div>
 
-                    <div id="paymentCard" class="payment-card">
+                    <div id="paymentCard" class="payment-card" style="display: none;">
                         <h2 class="payment-card-title">GIÁ BÁN THEO PHƯƠNG ÁN THANH TOÁN</h2>
                         <div id="paymentList" class="payment-list"></div>
                     </div>
