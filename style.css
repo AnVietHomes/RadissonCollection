@@ -43,7 +43,6 @@ body {
     flex-direction: column;
 }
 
-/* KHUNG ĐẦU TRANG: THANH TÌM KIẾM NẰM SÁT TRÊN, THẺ THÔNG TIN NÂNG CAO VỪA TRỌN MÀN HÌNH */
 .viewport-stage {
     min-height: 100vh;
     padding-top: clamp(10px, 1.3vh, 18px);
@@ -76,7 +75,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: clamp(265px, 25vw, 370px);
+    width: clamp(275px, 26vw, 390px);
     height: clamp(40px, 4.3vh, 46px);
     padding: 0 18px;
     border-radius: 999px;
@@ -155,6 +154,21 @@ body {
     transform: translateY(0);
 }
 
+.btn-inventory {
+    background: linear-gradient(135deg, #f9a363 0%, #f8be62 100%);
+    color: var(--text-dark);
+}
+
+.inv-count-pill {
+    background: rgba(24, 21, 18, 0.85);
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    line-height: 1.2;
+}
+
 .btn-360-render {
     background: linear-gradient(135deg, #fbd7be 0%, #f7c7a5 100%);
 }
@@ -178,7 +192,7 @@ body {
     backdrop-filter: blur(8px);
 }
 
-/* ================= THẺ CHÍNH (CHIỀU CAO NÂNG CAO ĐỂ ẢNH & LAYOUT RỘNG RÃI) ================= */
+/* ================= THẺ CHÍNH ================= */
 .main-card {
     flex: 1;
     width: 100%;
@@ -209,7 +223,6 @@ body {
     z-index: 2;
 }
 
-/* TRẠNG THÁI BAN ĐẦU: GIỮ NGUYÊN BỐ CỤC 2 CỘT, ẢNH TÒA NHÀ NẰM ĐÚNG VỊ TRÍ CỘT TRÁI */
 .main-card.is-empty-state .unit-header-block,
 .main-card.is-empty-state .right-column {
     visibility: hidden;
@@ -283,7 +296,6 @@ body {
     text-align: right;
 }
 
-/* KHUNG PHỐI CẢNH 3D TÒA NHÀ (CAO HƠN THEO CHIỀU CAO THẺ) */
 .building-3d-card {
     flex: 1;
     min-height: clamp(420px, 64vh, 660px);
@@ -302,7 +314,6 @@ body {
     pointer-events: none;
 }
 
-/* CHẤM ĐỎ + ĐƯỜNG LINE + NHÃN MÃ CĂN TRÊN 3D */
 .marker-3d-wrapper {
     position: absolute;
     transform: translate(0, -50%);
@@ -369,7 +380,6 @@ body {
     z-index: 2;
 }
 
-/* MẶT BẰNG TẦNG SVG: TĂNG SIZE TO RÕ & CĂN GIỮA TRỰC TIẾP TRÊN 2 ẢNH BÊN DƯỚI */
 .floorplan-section {
     position: relative;
     width: 100%;
@@ -417,7 +427,6 @@ body {
     white-space: nowrap;
 }
 
-/* KHỐI GIỮA: THÔNG SỐ KỸ THUẬT & BẢNG GIÁ PTTT */
 .middle-info-grid {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
@@ -425,7 +434,6 @@ body {
     align-items: start;
 }
 
-/* KHI KHÔNG CÓ BẢNG GIÁ PTTT: CỤM TEXT THÔNG TIN CĂN ĐỀU 100% CHIỀU RỘNG CỦA 2 ẢNH BÊN DƯỚI */
 .middle-info-grid.no-payment-card {
     grid-template-columns: 1fr;
     width: 100%;
@@ -476,7 +484,6 @@ body {
     text-align: right;
 }
 
-/* BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN */
 .payment-card {
     background: rgba(255, 255, 255, 0.6);
     border-radius: var(--inner-radius);
@@ -514,7 +521,6 @@ body {
     color: var(--text-dark);
 }
 
-/* GIỮ CỐ ĐỊNH KHUNG BAO NÚT GIÁ ĐỂ NÚT (+) VÀ (-) NẰM CÙNG 1 TỌA ĐỘ */
 .payment-pill-wrap {
     position: relative;
     display: flex;
@@ -570,7 +576,6 @@ body {
     background-color: #000000;
 }
 
-/* TRẠNG THÁI KHI XUẤT ẢNH: ẨN TOÀN BỘ NÚT (+/-) VÀ ẨN HẲN CÁC DÒNG ĐANG TẮT, KÉO DÀI THẺ XUỐNG CHO WATERMARK */
 .exporting-mode .btn-toggle-price {
     display: none !important;
 }
@@ -589,7 +594,6 @@ body {
     flex: none !important;
 }
 
-/* KHỐI DƯỚI: LAYOUT NỘI THẤT & DIỄN HỌA NỘI THẤT (CAO HƠN ĐỂ LAYOUT KHÔNG BỊ HẸP) */
 .bottom-media-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -707,7 +711,6 @@ body {
     object-fit: contain;
 }
 
-/* DẢI CHÂN WATERMARK NẰM DƯỚI CÙNG CỦA THẺ (TỰ ĐỘNG KÉO DÀI THẺ XUỐNG DƯỚI, KHÔNG ĐÈ ẢNH/TEXT) */
 .watermark-footer-bar {
     position: relative;
     z-index: 31;
@@ -737,7 +740,7 @@ body {
     line-height: 1.2;
 }
 
-/* ================= CHÂN TRANG (NẰM DƯỚI MÀN HÌNH ĐẦU, KÉO XUỐNG MỚI THẤY) ================= */
+/* ================= CHÂN TRANG ================= */
 .site-footer {
     padding: 22px 12px 12px;
     text-align: center;
@@ -787,6 +790,189 @@ body {
 
 .modal-overlay.is-open {
     display: flex;
+}
+
+/* POPUP BẢNG QUỸ CĂN MỞ BÁN */
+.inventory-dialog {
+    width: min(1060px, 95vw);
+    height: min(760px, 88vh);
+    background: linear-gradient(160deg, #fffdf9 0%, #fdf5ea 65%, #fae3c6 100%);
+    border-radius: 22px;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--text-dark);
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid rgba(24, 21, 18, 0.1);
+    position: relative;
+}
+
+.inventory-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.inventory-title {
+    font-size: clamp(16px, 1.3vw, 20px);
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: 0.3px;
+}
+
+.inventory-subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.inv-close-btn {
+    position: static;
+    background: rgba(24, 21, 18, 0.1);
+    color: var(--text-dark);
+    border: none;
+}
+
+.inv-close-btn:hover {
+    background: #e74c3c;
+    color: #ffffff;
+}
+
+.inventory-filters {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 0.9fr;
+    gap: 12px;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.45);
+    border-bottom: 1px solid rgba(24, 21, 18, 0.08);
+}
+
+.inv-filter-input,
+.inv-filter-select {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(24, 21, 18, 0.16);
+    background: #ffffff;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-dark);
+    outline: none;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.inv-filter-input:focus,
+.inv-filter-select:focus {
+    border-color: var(--pill-orange);
+    box-shadow: 0 0 0 3px rgba(249, 163, 99, 0.25);
+}
+
+.inventory-table-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 20px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.inventory-table thead th {
+    position: sticky;
+    top: 0;
+    background: #f9efe2;
+    color: var(--text-dark);
+    font-weight: 800;
+    text-align: left;
+    padding: 12px 12px;
+    border-bottom: 2px solid rgba(24, 21, 18, 0.12);
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.inventory-table tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid rgba(24, 21, 18, 0.08);
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.inventory-table tbody tr:hover {
+    background: rgba(249, 163, 99, 0.16);
+}
+
+.inv-col-stt {
+    width: 54px;
+    text-align: center !important;
+    color: var(--text-muted);
+}
+
+.inv-code-badge {
+    display: inline-block;
+    background: var(--pill-orange);
+    color: var(--text-dark);
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.inv-col-area {
+    text-align: right !important;
+    white-space: nowrap;
+}
+
+.inv-col-price {
+    text-align: right !important;
+    font-weight: 800 !important;
+    color: #b83b14;
+    white-space: nowrap;
+}
+
+.inv-col-action {
+    text-align: center !important;
+    width: 115px;
+}
+
+.btn-select-unit {
+    background: var(--text-dark);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 15px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+
+.btn-select-unit:hover {
+    background: #eb4d24;
+    transform: translateY(-1px);
+}
+
+.inv-empty-cell {
+    text-align: center;
+    padding: 36px 16px !important;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 /* LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT */
