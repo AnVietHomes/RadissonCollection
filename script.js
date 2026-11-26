@@ -456,7 +456,7 @@ function renderApartment(row) {
         { label: 'Tổng diện tích thông thủy:', value: isValidValue(areaNet) ? `${areaNet}m²` : '' },
         { label: 'Tổng diện tích tim tường:', value: isValidValue(areaGross) ? `${areaGross}m²` : '' },
         { label: 'Diện tích ban công:', value: isValidValue(areaBalcony) ? `${areaBalcony}m²` : '' },
-        { label: 'Giá trần:', value: ceilingPrice }
+        { label: 'Giá:', value: ceilingPrice }
     ].filter(item => isValidValue(item.value));
 
     specsListEl.innerHTML = specItems.map(item => `
