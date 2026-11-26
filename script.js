@@ -182,7 +182,6 @@ function normalizeUnitCode(input) {
     let clean = String(input || '').trim().toUpperCase().replace(/[-_,\s]+/g, '.');
     if (!clean) return '';
 
-    // Nếu người dùng đã nhập có dấu chấm phân tách (ví dụ: r.7.3a, 12a.1, r.12b.03a, 102a.5)
     if (clean.includes('.')) {
         let parts = clean.split('.').filter(Boolean);
         if (parts[0] === 'R') {
@@ -201,41 +200,32 @@ function normalizeUnitCode(input) {
         }
     }
 
-    // Nếu người dùng nhập liền không dấu chấm (ví dụ: 71, 0701, r0703a, 12a01, 12b3a, 1212a, 102a05)
     const compact = clean.replace(/^R/, '');
-
-    // Tách tất cả các cụm [Số + Chữ cái tùy chọn]
     const tokens = compact.match(/\d+[A-Z]?/g);
     if (tokens && tokens.length >= 2) {
-        // Trường hợp có chữ ở giữa giúp tách tự nhiên (VD: 12A01 -> ['12A', '01'], 12B3A -> ['12B', '3A'], 102A05 -> ['102A', '05'])
         const floor = padUnitSegment(tokens[0]);
         const unit = padUnitSegment(tokens[1]);
         return `R.${floor}.${unit}`;
     }
 
-    // Trường hợp toàn số hoặc chỉ có chữ ở cuối (VD: 71, 701, 0701, 1213, 703A, 0703A, 1212A, 10212)
     const singleMatch = compact.match(/^(\d+)([A-Z]?)$/);
     if (singleMatch) {
         const digits = singleMatch[1];
         const suffixLetter = singleMatch[2];
 
         if (digits.length === 2) {
-            // VD: 71 -> R.07.01
             return `R.0${digits[0]}.0${digits[1]}${suffixLetter}`;
         }
         if (digits.length === 3) {
-            // VD: 701 -> R.07.01 | 73A -> R.07.03A
             if (digits.startsWith('0')) {
                 return `R.${digits.slice(0, 2)}.0${digits.slice(2)}${suffixLetter}`;
             }
             return `R.0${digits[0]}.${digits.slice(1)}${suffixLetter}`;
         }
         if (digits.length === 4) {
-            // VD: 0701 -> R.07.01 | 1213 -> R.12.13 | 1212A -> R.12.12A
             return `R.${digits.slice(0, 2)}.${digits.slice(2)}${suffixLetter}`;
         }
         if (digits.length >= 5) {
-            // VD tầng 3 số: 10205 -> R.102.05
             return `R.${digits.slice(0, 3)}.${padUnitSegment(digits.slice(3))}${suffixLetter}`;
         }
     }
@@ -248,7 +238,6 @@ function formatSearchInputLive(rawValue) {
     let val = String(rawValue || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!val) return '';
 
-    // Luôn bắt đầu bằng R.
     if (val === 'R') return 'R.';
     if (!val.startsWith('R')) {
         val = 'R.' + val;
@@ -256,11 +245,9 @@ function formatSearchInputLive(rawValue) {
         val = 'R.' + val.slice(1);
     }
 
-    // Xử lý phần sau "R."
     let rest = val.slice(2).replace(/\.+/g, '.');
     if (!rest) return 'R.';
 
-    // Nếu người dùng đã gõ dấu chấm thứ 2 (VD: R.12A.01 hoặc R.07.03A)
     if (rest.includes('.')) {
         const dotIdx = rest.indexOf('.');
         const floorPart = rest.slice(0, dotIdx).replace(/\./g, '');
@@ -268,19 +255,15 @@ function formatSearchInputLive(rawValue) {
         return `R.${floorPart}.${unitPart}`;
     }
 
-    // Tự động chèn dấu chấm thứ 2 khi kết thúc cụm Tầng:
-    // 1. Tầng có chữ đi kèm như 12A, 12B, 19A, 20B, 102A và người dùng gõ tiếp ký tự căn
     const alphaFloorMatch = rest.match(/^(\d{1,3}[A-Z])(.+)$/);
     if (alphaFloorMatch) {
         return `R.${alphaFloorMatch[1]}.${alphaFloorMatch[2]}`;
     }
 
-    // 2. Tầng bắt đầu bằng 0 (07, 08, 09) và người dùng gõ sang ký tự thứ 3 (VD: R.070 -> R.07.0)
     if (/^0\d{2}/.test(rest)) {
         return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
     }
 
-    // 3. Tầng 2 chữ số (10..27) và người dùng gõ đủ 4 chữ số (VD: R.1213 -> R.12.13, R.1212A -> R.12.12A)
     if (/^[1-9]\d{3,}/.test(rest)) {
         return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
     }
@@ -296,7 +279,6 @@ function setupSearchInputEvents() {
     if (!inputEl) return;
 
     inputEl.addEventListener('input', e => {
-        // Không ép định dạng khi người dùng đang bấm phím Xóa (Backspace/Delete)
         if (e.inputType && e.inputType.startsWith('delete')) return;
         const formatted = formatSearchInputLive(inputEl.value);
         if (formatted !== inputEl.value) {
@@ -546,20 +528,20 @@ function update3DBuildingMarker(row, unitCode) {
 }
 
 // =========================================================================
-// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (GIẢI MÃ CHUẨN ID ILLUSTRATOR _x0030_1 -> 01)
+// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (GIẢI MÃ CHUẨN ID ILLUSTRATOR & MỞ LỚP ẨN)
 // =========================================================================
 function decodeIllustratorId(rawStr) {
     if (!rawStr) return '';
-    // Giải mã các ký tự số/ký hiệu do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_2A -> 12A)
+    // Giải mã các ký tự hex do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_0 -> 10, _x0031_2A -> 12A)
     let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{4})_/g, (_, hex) =>
         String.fromCharCode(parseInt(hex, 16))
     );
-    // Loại bỏ hậu tố trùng lặp nếu có (_1_, _2_...) và dấu gạch dưới đầu
-    decoded = decoded.replace(/_\d+_$/, '').replace(/^_+/, '');
+    // Loại bỏ hậu tố trùng lặp nếu có (_1_, _2_, _000000123..._, _1) và dấu gạch dưới đầu
+    decoded = decoded.replace(/_\d+_?$/, '').replace(/^_+/, '');
     return decoded.trim().toUpperCase();
 }
 
-// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '12A' -> '12A')
+// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '10' -> '10', '12A' -> '12A')
 function normalizePaddedAxis(rawAxis) {
     const decoded = decodeIllustratorId(rawAxis).replace(/[^A-Z0-9]/g, '');
     const match = decoded.match(/^0*(\d+)([A-Z]?)$/);
@@ -584,9 +566,20 @@ function clearSvgUnitStyle(el) {
     });
 }
 
-function highlightSvgUnitStyle(el) {
+function highlightSvgUnitStyle(el, svgRoot) {
     const highlightFill = '#eb4d24';
     const highlightStroke = '#c92a14';
+
+    // Nếu nhóm cha trong Illustrator bị ẩn (display="none"), mở hiển thị các thẻ <g> cha
+    let parent = el.parentElement;
+    while (parent && parent !== svgRoot) {
+        if (parent.tagName && parent.tagName.toLowerCase() === 'g') {
+            parent.style.setProperty('display', 'inline', 'important');
+            parent.style.setProperty('visibility', 'visible', 'important');
+            parent.style.setProperty('opacity', '1', 'important');
+        }
+        parent = parent.parentElement;
+    }
 
     el.style.setProperty('opacity', '1', 'important');
     el.style.setProperty('display', 'inline', 'important');
@@ -639,7 +632,7 @@ function updateFloorPlanSVG(row, unitCode) {
             svgEl.style.height = '100%';
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A) và dự phòng mã đuôi từ Mã căn hộ (VD: R.12B.03A -> 03A)
+            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A, 10 -> 10) và dự phòng đuôi Mã căn hộ (VD: R.12B.03A -> 03A)
             const sttRaw = getCol(row, ['stt căn', 'stt']);
             const codeParts = unitCode.split('.');
             const codeSuffixRaw = codeParts.length >= 3 ? codeParts[2] : '';
@@ -647,7 +640,6 @@ function updateFloorPlanSVG(row, unitCode) {
             const targetFromStt = isValidValue(sttRaw) ? normalizePaddedAxis(sttRaw) : '';
             const targetFromCode = isValidValue(codeSuffixRaw) ? normalizePaddedAxis(codeSuffixRaw) : '';
 
-            // Thu thập toàn bộ phần tử vector vùng căn (bỏ qua Layer_1 và nhóm nền bg)
             const unitCandidates = [];
             const allElements = svgEl.querySelectorAll('g, polygon, path, rect, polyline');
 
@@ -660,7 +652,7 @@ function updateFloorPlanSVG(row, unitCode) {
                 const decoded = decodeIllustratorId(rawIdentifier);
                 if (!decoded || decoded === 'LAYER_1' || decoded === 'LAYER1' || decoded === 'BG') return;
 
-                // Khớp tên poly: 01, 02, 03A, 06A, 12A, 12B, 15... (hoặc CAN_01, R.07.01)
+                // Khớp tên poly: 01, 02, 03A, 06A, 10, 12A, 12B, 15... (hoặc CAN_01, R.07.01)
                 const isDirectAxis = /^\d{1,2}[A-Z]?$/.test(decoded);
                 const isCanPrefixed = /^CAN[_\-.]?\d{1,2}[A-Z]?$/.test(decoded);
                 const isFullUnit = /^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?\d{1,2}[A-Z]?$/.test(decoded);
@@ -683,7 +675,6 @@ function updateFloorPlanSVG(row, unitCode) {
                 }
             });
 
-            // Ưu tiên khớp theo STT căn (đã bù số 0: 1 -> 01, 3A -> 03A), nếu không thấy thì khớp theo đuôi Mã căn hộ
             let matched = null;
             if (targetFromStt) {
                 matched = unitCandidates.find(item => item.axisToken === targetFromStt);
@@ -693,7 +684,7 @@ function updateFloorPlanSVG(row, unitCode) {
             }
 
             if (matched && matched.el) {
-                highlightSvgUnitStyle(matched.el);
+                highlightSvgUnitStyle(matched.el, svgEl);
                 activeHighlightedSvgEl = matched.el;
                 requestAnimationFrame(() => positionSvgCallout(matched.el));
                 setTimeout(() => positionSvgCallout(matched.el), 120);
@@ -975,13 +966,11 @@ function closeModalOnBackdrop(e, modalId) {
 // 11. CHẾ ĐỘ BẢO VỆ MÃ NGUỒN (CẤM F12, CẤM COPY, CẤM KIỂM TRA CODE)
 // =========================================================================
 function initSourceProtection() {
-    // 1. Cấm chuột phải
     document.addEventListener('contextmenu', e => {
         e.preventDefault();
         return false;
     }, true);
 
-    // 2. Cấm bôi đen, copy, cắt, kéo thả (ngoại trừ ô nhập mã căn #searchInput)
     ['selectstart', 'copy', 'cut', 'dragstart'].forEach(evtName => {
         document.addEventListener(evtName, e => {
             if (e.target && e.target.id === 'searchInput') return;
@@ -990,7 +979,6 @@ function initSourceProtection() {
         }, true);
     });
 
-    // 3. Cấm toàn bộ phím tắt F12, Inspect, Console, View Source, Save Page, Copy
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             closeImageLightbox();
@@ -1002,26 +990,22 @@ function initSourceProtection() {
         const key = (e.key || '').toUpperCase();
         const isCtrlOrMeta = e.ctrlKey || e.metaKey;
 
-        // Cấm F12
         if (e.key === 'F12' || e.keyCode === 123) {
             e.preventDefault();
             return false;
         }
 
-        // Cấm Ctrl+Shift+I / J / C / K hoặc Cmd+Option+I / J / C / U
         if ((isCtrlOrMeta && e.shiftKey && ['I', 'J', 'C', 'K'].includes(key)) ||
             (e.metaKey && e.altKey && ['I', 'J', 'C', 'U'].includes(key))) {
             e.preventDefault();
             return false;
         }
 
-        // Cấm Ctrl+U (Xem nguồn), Ctrl+S (Lưu trang), Ctrl+P (In trang)
         if (isCtrlOrMeta && ['U', 'S', 'P'].includes(key)) {
             e.preventDefault();
             return false;
         }
 
-        // Cấm Ctrl+C / Ctrl+X / Ctrl+A bên ngoài ô tìm kiếm
         if (isCtrlOrMeta && ['C', 'X', 'A'].includes(key)) {
             if (document.activeElement && document.activeElement.id === 'searchInput') return;
             e.preventDefault();
@@ -1029,7 +1013,6 @@ function initSourceProtection() {
         }
     }, true);
 
-    // 4. Phát hiện mở DevTools qua kích thước cửa sổ trên máy tính & làm sạch Console
     const shield = document.getElementById('devtoolsSecurityShield');
     setInterval(() => {
         try {
