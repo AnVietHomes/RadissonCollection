@@ -785,14 +785,16 @@ function update3DBuildingMarker(row, unitCode) {
     img3D.style.display = 'block';
     ph3D.style.display = 'none';
 
-    img3D.onload = () => position3DMarkerInCoverImage(document);
+    img3D.onload = () => {
+        requestAnimationFrame(() => position3DMarkerInCoverImage(document));
+    };
 
     if (img3D.getAttribute('src') !== imgSrc) {
         img3D.src = imgSrc;
     }
 
     if (img3D.complete && img3D.naturalWidth > 0) {
-        position3DMarkerInCoverImage(document);
+        requestAnimationFrame(() => position3DMarkerInCoverImage(document));
     }
 }
 
