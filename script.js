@@ -17,12 +17,13 @@ const CONFIG = {
 };
 
 let apartmentData = [];
+let openForSaleUnits = [];
 let hiddenPaymentsState = {};
 let activeHighlightedSvgEl = null;
 let preloadedLogoDataUrl = null;
 
 // =========================================================================
-// 1. TẢI VÀ PHÂN TÍCH DỮ LIỆU CSV (KHÔNG TỰ ĐỘNG HIỆN CĂN NÀO KHI MỚI VÀO WEB)
+// 1. TẢI VÀ PHÂN TÍCH DỮ LIỆU CSV
 // =========================================================================
 window.addEventListener('DOMContentLoaded', () => {
     setupSearchInputEvents();
@@ -38,10 +39,24 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(csvText => {
             apartmentData = parseCSVStandard(csvText);
 
+            // Lọc danh sách quỹ căn mở bán giai đoạn này (các căn có Giá trần hợp lệ)
+            openForSaleUnits = apartmentData.filter(row => {
+                const ceiling = getCol(row, ['giá trần', 'giá bán']);
+                return isValidValue(ceiling);
+            });
+
+            const countBadge = document.getElementById('openUnitsCountBadge');
+            if (countBadge) {
+                countBadge.innerText = openForSaleUnits.length;
+            }
+
+            populateInventoryFilters();
+            renderInventoryTable(openForSaleUnits);
+
             const toast = document.getElementById('statusToast');
             if (toast) {
-                toast.innerText = `Sẵn sàng (${apartmentData.length} căn)`;
-                setTimeout(() => { toast.style.display = 'none'; }, 2200);
+                toast.innerText = `Sẵn sàng (${openForSaleUnits.length} căn mở bán / ${apartmentData.length} căn)`;
+                setTimeout(() => { toast.style.display = 'none'; }, 2800);
             }
         })
         .catch(() => {
@@ -226,7 +241,7 @@ function padUnitSegment(seg) {
     return `${numPart}${m[2]}`;
 }
 
-// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn
+// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn khi người dùng bấm Enter hoặc rời ô nhập
 function normalizeUnitCode(input) {
     let clean = String(input || '').trim().toUpperCase().replace(/[-_,\s]+/g, '.');
     if (!clean) return '';
@@ -250,6 +265,13 @@ function normalizeUnitCode(input) {
     }
 
     const compact = clean.replace(/^R/, '');
+
+    // Hỗ trợ chuỗi liền nhau có chữ cái ở tầng như 12A06 hoặc 12A6
+    const specialFloorCompact = compact.match(/^(\d{2}[A-Z])(\d{1,2}[A-Z]?)$/);
+    if (specialFloorCompact) {
+        return `R.${specialFloorCompact[1]}.${padUnitSegment(specialFloorCompact[2])}`;
+    }
+
     const tokens = compact.match(/\d+[A-Z]?/g);
     if (tokens && tokens.length >= 2) {
         const floor = padUnitSegment(tokens[0]);
@@ -282,7 +304,12 @@ function normalizeUnitCode(input) {
     return clean.startsWith('R.') ? clean : (clean.startsWith('R') ? 'R.' + clean.slice(1) : 'R.' + clean);
 }
 
-// Tự động định dạng R.Tầng.Căn ngay trong lúc gõ trên thanh tìm kiếm
+// =========================================================================
+// TỰ ĐỘNG CHÈN DẤU CHẤM THÔNG MINH NGAY LÚC GÕ (XỬ LÝ TẦNG 12A, 12B, 19A, 20B...)
+// - Gõ 2 số tầng + chữ cái (VD: 12A) => tự chèn dấu '.' sau chữ cái: R.12A.
+// - Gõ 2 số tầng + 1 số khác (VD: 120) => tự chèn dấu '.' sau 2 số tầng: R.12.0
+// - Gõ tầng 1 chữ số > 2 (VD: 7, 8, 9) + số kế tiếp => tự thành R.07.
+// =========================================================================
 function formatSearchInputLive(rawValue) {
     let val = String(rawValue || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!val) return '';
@@ -297,24 +324,46 @@ function formatSearchInputLive(rawValue) {
     let rest = val.slice(2).replace(/\.+/g, '.');
     if (!rest) return 'R.';
 
+    // Nếu người dùng đã có dấu '.' phân tách tầng và căn
     if (rest.includes('.')) {
         const dotIdx = rest.indexOf('.');
-        const floorPart = rest.slice(0, dotIdx).replace(/\./g, '');
-        const unitPart = rest.slice(dotIdx + 1).replace(/\./g, '');
+        let floorPart = rest.slice(0, dotIdx).replace(/\./g, '');
+        let unitPart = rest.slice(dotIdx + 1).replace(/\./g, '');
+
+        // Nếu tầng chỉ có 1 chữ số (VD: R.7.12) thì tự đệm 0 -> R.07.12
+        if (/^\d$/.test(floorPart)) {
+            floorPart = '0' + floorPart;
+        }
         return `R.${floorPart}.${unitPart}`;
     }
 
-    const alphaFloorMatch = rest.match(/^(\d{1,3}[A-Z])(.+)$/);
-    if (alphaFloorMatch) {
-        return `R.${alphaFloorMatch[1]}.${alphaFloorMatch[2]}`;
+    // Chưa có dấu chấm thứ 2 -> phân tích chuỗi sau "R."
+    // Trường hợp 1: Bắt đầu bằng 2 chữ số (VD: 12, 07, 19, 20...)
+    if (/^\d{2}/.test(rest)) {
+        const firstTwo = rest.slice(0, 2);
+        const afterTwo = rest.slice(2);
+
+        // Chưa gõ ký tự thứ 3 (mới gõ "12" hoặc "07") -> chờ xem ký tự tiếp theo là chữ cái hay số
+        if (!afterTwo) {
+            return `R.${firstTwo}`;
+        }
+
+        // Ký tự thứ 3 là CHỮ CÁI (VD: 12A, 12B, 19A, 20B) -> tự chèn dấu '.' ngay sau chữ cái đó
+        if (/^[A-Z]/.test(afterTwo)) {
+            const letter = afterTwo[0];
+            const unitDigits = afterTwo.slice(1);
+            return `R.${firstTwo}${letter}.${unitDigits}`;
+        }
+
+        // Ký tự thứ 3 là CHỮ SỐ (VD: 120, 071) -> tự chèn dấu '.' ngay sau 2 số đầu mã tầng
+        if (/^\d/.test(afterTwo)) {
+            return `R.${firstTwo}.${afterTwo}`;
+        }
     }
 
-    if (/^0\d{2}/.test(rest)) {
-        return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
-    }
-
-    if (/^[1-9]\d{3,}/.test(rest)) {
-        return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
+    // Trường hợp 2: Tầng 1 chữ số từ 3..9 (VD: 7, 8, 9) và gõ tiếp ký tự thứ 2 (VD: 70 -> R.07.0)
+    if (/^[3-9]\d/.test(rest)) {
+        return `R.0${rest[0]}.${rest.slice(1)}`;
     }
 
     return `R.${rest}`;
@@ -352,14 +401,14 @@ function setupSearchInputEvents() {
     });
 }
 
-function searchApartment() {
+function searchApartment(overrideCode) {
     if (apartmentData.length === 0) {
         alert('Dữ liệu đang được tải, vui lòng đợi trong giây lát!');
         return;
     }
 
     const inputEl = document.getElementById('searchInput');
-    const rawQuery = inputEl.value.trim();
+    const rawQuery = (overrideCode !== undefined ? String(overrideCode) : inputEl.value).trim();
     if (!rawQuery || rawQuery === 'R.') return;
 
     const normalizedQuery = normalizeUnitCode(rawQuery);
@@ -380,7 +429,6 @@ function searchApartment() {
 }
 
 function renderApartment(row) {
-    // Mở giao diện chi tiết và nút Tải xuống ảnh khi đã tìm kiếm căn hộ
     const mainCard = document.getElementById('exportContainer');
     if (mainCard) mainCard.classList.remove('is-empty-state');
 
@@ -434,7 +482,7 @@ function renderApartment(row) {
         </div>
     `).join('');
 
-    // 4. Render Bảng giá theo PTTT (Tự động ẩn nếu không có data)
+    // 4. Render Bảng giá theo PTTT
     renderPaymentPlans(row);
 
     // 5. Cập nhật ảnh 3D tòa nhà & điểm định vị
@@ -448,7 +496,137 @@ function renderApartment(row) {
 }
 
 // =========================================================================
-// 4. BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN (NÚT + VÀ - CỐ ĐỊNH CÙNG VỊ TRÍ)
+// 4. BẢNG QUỸ CĂN MỞ BÁN GIAI ĐOẠN NÀY (CÓ GIÁ TRẦN)
+// =========================================================================
+function openInventoryModal() {
+    if (apartmentData.length === 0) {
+        alert('Dữ liệu đang được tải, vui lòng đợi trong giây lát!');
+        return;
+    }
+    const modal = document.getElementById('modalInventory');
+    if (modal) {
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        filterInventoryTable();
+    }
+}
+
+function closeInventoryModal() {
+    const modal = document.getElementById('modalInventory');
+    if (modal) {
+        modal.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+}
+
+function populateInventoryFilters() {
+    const floorSelect = document.getElementById('invFilterFloor');
+    const typeSelect = document.getElementById('invFilterType');
+    if (!floorSelect || !typeSelect) return;
+
+    const floors = new Set();
+    const types = new Set();
+
+    openForSaleUnits.forEach(row => {
+        const code = normalizeUnitCode(getCol(row, ['mã căn hộ', 'mã căn']));
+        const parts = code.split('.');
+        const floor = getCol(row, ['tầng']) || (parts.length >= 2 ? parts[1] : '');
+        if (isValidValue(floor)) floors.add(padUnitSegment(floor));
+
+        const pType = getCol(row, ['loại hình sản phẩm', 'loại hình']);
+        if (isValidValue(pType)) types.add(pType.trim());
+    });
+
+    const sortedFloors = Array.from(floors).sort((a, b) => {
+        const idxA = CONFIG.PHYSICAL_FLOORS.indexOf(a.replace(/^0+/, ''));
+        const idxB = CONFIG.PHYSICAL_FLOORS.indexOf(b.replace(/^0+/, ''));
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        return a.localeCompare(b, undefined, { numeric: true });
+    });
+
+    floorSelect.innerHTML = '<option value="">Tất cả tầng</option>' +
+        sortedFloors.map(f => `<option value="${f}">Tầng ${f}</option>`).join('');
+
+    typeSelect.innerHTML = '<option value="">Tất cả loại hình</option>' +
+        Array.from(types).sort().map(t => `<option value="${t}">${t}</option>`).join('');
+}
+
+function filterInventoryTable() {
+    const kw = (document.getElementById('invSearchInput')?.value || '').trim().toUpperCase();
+    const floorFilter = document.getElementById('invFilterFloor')?.value || '';
+    const typeFilter = document.getElementById('invFilterType')?.value || '';
+
+    const filtered = openForSaleUnits.filter(row => {
+        const rawCode = getCol(row, ['mã căn hộ', 'mã căn']);
+        const normCode = normalizeUnitCode(rawCode);
+        const parts = normCode.split('.');
+        const floor = padUnitSegment(getCol(row, ['tầng']) || (parts.length >= 2 ? parts[1] : ''));
+        const pType = getCol(row, ['loại hình sản phẩm', 'loại hình']).trim();
+
+        if (kw && !normCode.includes(kw) && !rawCode.toUpperCase().includes(kw)) return false;
+        if (floorFilter && floor !== floorFilter) return false;
+        if (typeFilter && pType !== typeFilter) return false;
+        return true;
+    });
+
+    renderInventoryTable(filtered);
+}
+
+function renderInventoryTable(list) {
+    const tbody = document.getElementById('inventoryTableBody');
+    const summaryEl = document.getElementById('invResultSummary');
+    if (!tbody) return;
+
+    if (summaryEl) {
+        summaryEl.innerText = `Hiển thị ${list.length} / ${openForSaleUnits.length} căn mở bán`;
+    }
+
+    if (list.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="inv-empty-cell">Không tìm thấy căn hộ phù hợp với điều kiện lọc</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = list.map((row, index) => {
+        const unitCode = getCol(row, ['mã căn hộ', 'mã căn']) || '---';
+        const pType = getCol(row, ['loại hình sản phẩm', 'loại hình']) || '---';
+        const direction = translateDirection(getCol(row, ['hướng'])) || '---';
+        const areaNet = getCol(row, ['tổng diện tích thông thuỷ', 'tổng diện tích thông thủy', 'diện tích thông thủy']);
+        const areaGross = getCol(row, ['tổng diện tích tim tường', 'diện tích tim tường']);
+        const areaDisplay = isValidValue(areaNet)
+            ? `${areaNet} m²`
+            : (isValidValue(areaGross) ? `${areaGross} m² (tim tường)` : '---');
+        const ceilingPrice = formatPrice(getCol(row, ['giá trần', 'giá bán'])) || '---';
+
+        return `
+            <tr>
+                <td class="inv-col-stt">${index + 1}</td>
+                <td class="inv-col-code"><span class="inv-code-badge">${unitCode}</span></td>
+                <td>${pType}</td>
+                <td>${direction}</td>
+                <td class="inv-col-area">${areaDisplay}</td>
+                <td class="inv-col-price">${ceilingPrice}</td>
+                <td class="inv-col-action">
+                    <button type="button" class="btn-select-unit" onclick="selectUnitFromInventory('${unitCode.replace(/'/g, "\\'")}')">
+                        Xem căn
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function selectUnitFromInventory(unitCode) {
+    closeInventoryModal();
+    searchApartment(unitCode);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =========================================================================
+// 5. BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN (NÚT + VÀ - CỐ ĐỊNH CÙNG VỊ TRÍ)
 // =========================================================================
 function renderPaymentPlans(row) {
     const paymentListEl = document.getElementById('paymentList');
@@ -511,7 +689,7 @@ function togglePaymentVisibility(planKey) {
 }
 
 // =========================================================================
-// 5. ĐỊNH VỊ ĐIỂM CHẤM TRÊN ẢNH PHỐI CẢNH 3D TÒA NHÀ (images/toa1.jpg | toa2.jpg)
+// 6. ĐỊNH VỊ ĐIỂM CHẤM TRÊN ẢNH PHỐI CẢNH 3D TÒA NHÀ
 // =========================================================================
 function update3DBuildingMarker(row, unitCode) {
     const img3D = document.getElementById('img3D');
@@ -577,20 +755,17 @@ function update3DBuildingMarker(row, unitCode) {
 }
 
 // =========================================================================
-// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (HỖ TRỢ MÃ HEX 2 & 4 CHỮ SỐ CỦA ILLUSTRATOR)
+// 7. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (HỖ TRỢ MÃ HEX 2 & 4 CHỮ SỐ CỦA ILLUSTRATOR)
 // =========================================================================
 function decodeIllustratorId(rawStr) {
     if (!rawStr) return '';
-    // Giải mã cả hex 2 chữ số (_x30_1 -> 01, _x31_2A -> 12A) và hex 4 chữ số (_x0030_1 -> 01) của Illustrator
     let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{2,4})_/g, (_, hex) =>
         String.fromCharCode(parseInt(hex, 16))
     );
-    // Loại bỏ hậu tố trùng lặp của Illustrator (_1_, _00000123..._, -2) và dấu gạch dưới đầu
     decoded = decoded.replace(/_\d+_?$/, '').replace(/-\d+$/, '').replace(/^_+/, '');
     return decoded.trim().toUpperCase();
 }
 
-// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '11' -> '11', '12A' -> '12A')
 function normalizePaddedAxis(rawAxis) {
     const decoded = decodeIllustratorId(rawAxis).replace(/[^A-Z0-9]/g, '');
     const match = decoded.match(/^0*(\d+)([A-Z]?)$/);
@@ -618,7 +793,6 @@ function isInsideBgGroup(el, svgRoot) {
     return false;
 }
 
-// Trích xuất mã trục căn từ mọi kiểu đặt tên trong Illustrator (id, data-name, inkscape:label, <title>)
 function extractAxisTokenFromElement(el) {
     const directTitleEl = Array.from(el.children || []).find(
         c => c.tagName && c.tagName.toLowerCase() === 'title'
@@ -634,18 +808,15 @@ function extractAxisTokenFromElement(el) {
         const decoded = decodeIllustratorId(rawName);
         if (!decoded || decoded === 'LAYER_1' || decoded === 'LAYER1' || decoded === 'BG') continue;
 
-        // 1. Khớp trực tiếp tên layer/path: 01, 02, 03A, 06A, 10, 11, 12A, 12B, 15...
         if (/^\d{1,2}[A-Z]?$/.test(decoded)) {
             return normalizePaddedAxis(decoded);
         }
 
-        // 2. Khớp có tiền tố tiếng Việt/Anh: CĂN 11, CAN_11, CAN-03A, CH11, P11, UNIT_11...
         const prefixMatch = decoded.match(/^(?:CĂN|CAN|CH|UNIT|APT|P|NO)[_\-.\s]*(\d{1,2}[A-Z]?)$/);
         if (prefixMatch) {
             return normalizePaddedAxis(prefixMatch[1]);
         }
 
-        // 3. Khớp đầy đủ mã căn: R.07.11, R_12B_03A, 07.11...
         const fullMatch = decoded.match(/^(?:R[.\-_\s]*)?\d{1,2}[A-Z]?[.\-_\s]+(\d{1,2}[A-Z]?)$/);
         if (fullMatch) {
             return normalizePaddedAxis(fullMatch[1]);
@@ -670,7 +841,6 @@ function highlightSvgUnitStyle(el, svgRoot) {
     const highlightFill = '#eb4d24';
     const highlightStroke = '#c92a14';
 
-    // Mở hiển thị mọi thẻ cha <g> nếu trong Illustrator từng tắt con mắt
     let parent = el.parentElement;
     let topContainer = el;
     while (parent && parent !== svgRoot) {
@@ -686,7 +856,6 @@ function highlightSvgUnitStyle(el, svgRoot) {
         parent = parent.parentElement;
     }
 
-    // Đưa phần tử căn được tô màu lên lớp trên cùng của SVG để chắc chắn nằm trên layer bg
     if (topContainer && topContainer.parentElement === svgRoot) {
         svgRoot.appendChild(topContainer);
     }
@@ -737,7 +906,6 @@ function updateFloorPlanSVG(row, unitCode) {
             svgEl.style.height = '100%';
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A, 11 -> 11) và dự phòng đuôi Mã căn hộ (VD: R.07.11 -> 11)
             const sttRaw = getCol(row, ['stt căn', 'stt']);
             const codeParts = unitCode.split('.');
             const codeSuffixRaw = codeParts.length >= 3 ? codeParts[2] : '';
@@ -801,7 +969,7 @@ function positionSvgCallout(targetEl) {
 }
 
 // =========================================================================
-// 7. CẬP NHẬT ẢNH LAYOUT & DIỄN HỌA NỘI THẤT (FOLDER images/)
+// 8. CẬP NHẬT ẢNH LAYOUT & DIỄN HỌA NỘI THẤT (FOLDER images/)
 // =========================================================================
 function resolveImagePath(fileName, defaultExt) {
     const clean = String(fileName).trim();
@@ -865,7 +1033,7 @@ function updateMediaCards(row) {
 }
 
 // =========================================================================
-// 8. XUẤT ẢNH BÁO GIÁ (KÉO DÀI THẺ XUỐNG DƯỚI ĐỂ CHỨA WATERMARK, KHÔNG ĐÈ ẢNH/TEXT)
+// 9. XUẤT ẢNH BÁO GIÁ (KÉO DÀI THẺ XUỐNG DƯỚI ĐỂ CHỨA WATERMARK, KHÔNG ĐÈ ẢNH/TEXT)
 // =========================================================================
 function exportImage() {
     const container = document.getElementById('exportContainer');
@@ -904,7 +1072,7 @@ function exportImage() {
 }
 
 // =========================================================================
-// 9. LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT NỘI THẤT (DUPLEX)
+// 10. LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT NỘI THẤT (DUPLEX)
 // =========================================================================
 let lbScale = 1;
 let lbTranslateX = 0;
@@ -1018,7 +1186,7 @@ function setupLightboxEvents() {
 }
 
 // =========================================================================
-// 10. POPUP 360 ĐỘ THỰC TẾ & 360 ĐỘ DIỄN HỌA
+// 11. POPUP 360 ĐỘ THỰC TẾ & 360 ĐỘ DIỄN HỌA
 // =========================================================================
 function open360RealModal() {
     const modal = document.getElementById('modal360Real');
@@ -1057,7 +1225,7 @@ function closeModalOnBackdrop(e, modalId) {
 }
 
 // =========================================================================
-// 11. CHẾ ĐỘ BẢO VỆ MÃ NGUỒN (CẤM F12, CẤM COPY, CẤM KIỂM TRA CODE)
+// 12. CHẾ ĐỘ BẢO VỆ MÃ NGUỒN (CẤM F12, CẤM COPY, CẤM KIỂM TRA CODE)
 // =========================================================================
 function initSourceProtection() {
     document.addEventListener('contextmenu', e => {
@@ -1067,7 +1235,7 @@ function initSourceProtection() {
 
     ['selectstart', 'copy', 'cut', 'dragstart'].forEach(evtName => {
         document.addEventListener(evtName, e => {
-            if (e.target && e.target.id === 'searchInput') return;
+            if (e.target && (e.target.id === 'searchInput' || e.target.id === 'invSearchInput')) return;
             e.preventDefault();
             return false;
         }, true);
@@ -1078,6 +1246,7 @@ function initSourceProtection() {
             closeImageLightbox();
             close360RealModal();
             close360RenderModal();
+            closeInventoryModal();
             return;
         }
 
@@ -1101,7 +1270,7 @@ function initSourceProtection() {
         }
 
         if (isCtrlOrMeta && ['C', 'X', 'A'].includes(key)) {
-            if (document.activeElement && document.activeElement.id === 'searchInput') return;
+            if (document.activeElement && (document.activeElement.id === 'searchInput' || document.activeElement.id === 'invSearchInput')) return;
             e.preventDefault();
             return false;
         }
