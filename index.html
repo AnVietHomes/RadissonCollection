@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh dấu quỹ căn tự động Radisson Collection Ha Long Bay</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <meta property="og:title" content="Đánh dấu quỹ căn tự động Radisson Collection Ha Long Bay">
+    <meta property="og:description" content="Hệ thống tra cứu mặt bằng, vị trí căn hộ, thông số kỹ thuật và bảng giá dự án Radisson Collection Ha Long Bay.">
+    <meta property="og:image" content="images/bg.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;">
+
+<div class="app-wrapper">
+    <!-- THANH CÔNG CỤ PHÍA TRÊN -->
+    <header class="top-toolbar">
+        <div class="toolbar-left">
+            <div class="search-pill">
+                <button type="button" class="search-icon-btn" onclick="searchApartment()" title="Tra cứu mã căn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" placeholder="Nhập mã căn: Ví dụ R.12.13" autocomplete="off" spellcheck="false">
+            </div>
+
+            <button type="button" class="btn-toolbar btn-export" onclick="exportImage()" title="Tải xuống ảnh báo giá chất lượng cao">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Tải xuống ảnh</span>
+            </button>
+
+            <span id="statusToast" class="status-toast">Đang tải dữ liệu...</span>
+        </div>
+
+        <div class="toolbar-right">
+            <button type="button" class="btn-toolbar btn-360-render" onclick="open360RenderModal()">
+                360 độ diễn họa
+            </button>
+            <button type="button" class="btn-toolbar btn-360-real" onclick="open360RealModal()">
+                360 độ thực tế
+            </button>
+        </div>
+    </header>
+
+    <!-- KHUNG THẺ CHÍNH (NỀN images/card.png & CHỤP KHI TẢI ẢNH) -->
+    <main id="exportContainer" class="main-card">
+        <div class="card-grid">
+            <!-- CỘT TRÁI: MÃ CĂN + THÔNG TIN TÓM TẮT + PHỐI CẢNH 3D TÒA NHÀ -->
+            <section class="left-column">
+                <div class="unit-header-block">
+                    <div class="unit-code-row">
+                        <span class="unit-code-label">Mã căn:</span>
+                        <span id="lblMaCanTop" class="unit-code-pill">R.17.08</span>
+                    </div>
+                    <div id="topMetaContainer" class="top-meta-list"></div>
+                </div>
+
+                <div class="building-3d-card" id="card3D">
+                    <img id="img3D" src="images/toa1.jpg" alt="Phối cảnh tòa nhà Radisson Collection Ha Long Bay" draggable="false" onerror="handleImageFallback(this, '3d')">
+                    <div id="placeholder3D" class="image-placeholder" style="display: none;">Chưa có ảnh phối cảnh tòa nhà</div>
+
+                    <!-- ĐIỂM CHẤM ĐỎ + ĐƯỜNG DẪN + NHÃN MÃ CĂN -->
+                    <div id="marker3DWrapper" class="marker-3d-wrapper" style="display: none;">
+                        <span class="marker-dot"></span>
+                        <span class="marker-line"></span>
+                        <span id="lblMaCan3D" class="marker-pill">R.17.08</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CỘT PHẢI: MẶT BẰNG TẦNG + THÔNG SỐ & GIÁ PTTT + LAYOUT & DIỄN HỌA NỘI THẤT -->
+            <section class="right-column">
+                <!-- KHU VỰC 1: MẶT BẰNG TẦNG SVG -->
+                <div class="floorplan-section" id="floorplanBox">
+                    <div id="svgContainer" class="svg-container">
+                        <div class="image-placeholder">Nhập mã căn để hiển thị mặt bằng tầng</div>
+                    </div>
+                    <div id="svgCalloutBadge" class="svg-callout-badge" style="display: none;">
+                        <span id="lblMaCanSvg" class="svg-callout-pill">R.17.08</span>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC 2: THÔNG SỐ CHI TIẾT & GIÁ BÁN THEO PTTT -->
+                <div class="middle-info-grid">
+                    <div id="infoSpecsList" class="specs-list"></div>
+
+                    <div id="paymentCard" class="payment-card">
+                        <h2 class="payment-card-title">GIÁ BÁN THEO PHƯƠNG ÁN THANH TOÁN</h2>
+                        <div id="paymentList" class="payment-list"></div>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC 3: LAYOUT NỘI THẤT & DIỄN HỌA NỘI THẤT -->
+                <div class="bottom-media-grid">
+                    <div class="media-block">
+                        <div class="media-title">Layout nội thất</div>
+                        <div class="media-card layout-card" id="cardLayout" onclick="openImageLightbox('layout')" title="Bấm để phóng to và kéo xem chi tiết">
+                            <img id="imgLayout" src="" alt="Layout nội thất" draggable="false" style="display: none;">
+                            <div id="phLayout" class="image-placeholder">Chưa có ảnh layout</div>
+                            <span class="zoom-hint-badge" data-html2canvas-ignore="true">Phóng to</span>
+                        </div>
+                    </div>
+
+                    <div class="media-block">
+                        <div class="media-title">Diễn họa nội thất</div>
+                        <div class="media-card interior-card" id="cardInterior" onclick="openImageLightbox('interior')" title="Bấm để xem ảnh lớn">
+                            <img id="imgInterior" src="" alt="Diễn họa nội thất" draggable="false" style="display: none;">
+                            <div id="phInterior" class="image-placeholder">Chưa có ảnh diễn họa</div>
+                            <span class="zoom-hint-badge" data-html2canvas-ignore="true">Phóng to</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- WATERMARK CHỈ HIỆN KHI XUẤT ẢNH -->
+        <div id="watermarkSystem" class="export-watermark" style="display: none;">
+            <div class="watermark-center">
+                <img src="images/logo.svg" alt="An Việt Property">
+                <img src="images/logo.svg" alt="An Việt Property">
+                <img src="images/logo.svg" alt="An Việt Property">
+            </div>
+            <div class="watermark-footer">
+                <img src="images/logo.svg" alt="An Việt Property">
+                <span>TÀI LIỆU ĐỘC QUYỀN ĐƯỢC SẢN XUẤT BỞI AN VIỆT PROPERTY</span>
+                <img src="images/logo.svg" alt="An Việt Property">
+            </div>
+        </div>
+    </main>
+
+    <!-- CHÂN TRANG -->
+    <footer class="site-footer">
+        <img src="images/logo.svg" alt="An Việt Property" class="footer-logo" draggable="false" onerror="this.style.display='none'">
+        <div class="footer-project-name">ĐÁNH DẤU QUỸ CĂN TỰ ĐỘNG RADISSON COLLECTION HA LONG BAY</div>
+        <p class="footer-disclaimer">
+            Trang web được nghiên cứu và phát triển bởi Đơn vị phát triển kinh doanh và độc quyền phân phối dự án An Việt Property, nhằm mục đích hỗ trợ ban kinh doanh.<br>
+            Mọi hành vi sao chép, ăn cắp mã nguồn và thực hiện chỉnh sửa sai mục đích đều nằm ngoài phạm vi kiểm soát của An Việt Property.<br>
+            Các hình ảnh tầm view, diện tích và vị trí căn đánh dấu trên ảnh 3D tòa nhà chỉ mang tính chất tương đối và chỉ để tham khảo.
+        </p>
+    </footer>
+</div>
+
+<!-- POPUP 1: LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT NỘI THẤT (HỖ TRỢ DUPLEX) -->
+<div id="imageLightbox" class="modal-overlay" onclick="closeLightboxOnBackdrop(event)">
+    <div class="lightbox-dialog">
+        <div class="lightbox-topbar">
+            <span id="lightboxTitle" class="lightbox-title">Layout nội thất</span>
+            <div class="lightbox-controls">
+                <button type="button" class="lb-btn" onclick="adjustLightboxZoom(-0.25)" title="Thu nhỏ">−</button>
+                <span id="zoomLevelText" class="lb-zoom-label">100%</span>
+                <button type="button" class="lb-btn" onclick="adjustLightboxZoom(0.25)" title="Phóng to">+</button>
+                <button type="button" class="lb-btn lb-btn-reset" onclick="resetLightboxTransform()" title="Đặt lại kích thước">Đặt lại</button>
+                <button type="button" class="lb-btn lb-btn-close" onclick="closeImageLightbox()" title="Đóng">&times;</button>
+            </div>
+        </div>
+        <div id="lightboxViewport" class="lightbox-viewport">
+            <img id="lightboxImg" src="" alt="Chi tiết" draggable="false">
+        </div>
+        <div class="lightbox-hint">Cuộn chuột hoặc dùng nút + / − để thu phóng • Nhấn giữ và kéo để di chuyển</div>
+    </div>
+</div>
+
+<!-- POPUP 2: 360 ĐỘ THỰC TẾ -->
+<div id="modal360Real" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modal360Real')">
+    <div class="iframe-dialog">
+        <button type="button" class="modal-close-circle" onclick="close360RealModal()" title="Đóng">&times;</button>
+        <iframe id="iframe360Real" src="" allowfullscreen loading="lazy"></iframe>
+    </div>
+</div>
+
+<!-- POPUP 3: 360 ĐỘ DIỄN HỌA (THÔNG BÁO ĐANG HOÀN THIỆN) -->
+<div id="modal360Render" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modal360Render')">
+    <div class="notice-dialog">
+        <button type="button" class="modal-close-circle notice-close" onclick="close360RenderModal()" title="Đóng">&times;</button>
+        <div class="notice-icon">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <p class="notice-text">Link 360 đang trong quá trình hoàn thiện</p>
+    </div>
+</div>
+
+<!-- CẢNH BÁO BẢO MẬT KHI MỞ CÔNG CỤ KIỂM TRA CODE -->
+<div id="devtoolsSecurityShield">
+    <div class="shield-box">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#f9a363" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3>BẢN QUYỀN THUỘC VỀ AN VIỆT PROPERTY</h3>
+        <p>Hệ thống đã khóa tính năng kiểm tra mã nguồn và sao chép dữ liệu.<br>Vui lòng đóng công cụ nhà phát triển (DevTools) để tiếp tục sử dụng.</p>
+    </div>
+</div>
+
+<!-- CẢNH BÁO XOAY NGANG TRÊN ĐIỆN THOẠI -->
+<div id="rotateDeviceWarning">
+    <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#f9a363" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rotate-icon">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+    </svg>
+    <p>Vui lòng xoay ngang thiết bị di động<br>để trải nghiệm đánh dấu quỹ căn tốt nhất!</p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

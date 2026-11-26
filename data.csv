@@ -1,0 +1,267 @@
+﻿STT,Tòa,Tầng,STT căn,Mã căn hộ,Dòng sản phẩm,Loại hình,Hướng,Diện tích ban công,Tổng diện tích thông thuỷ,Tổng diện tích tim tường,Giá trần,Thanh toán theo tiến độ,Vay Ngân hàng,Thanh toán sớm 30%,Thanh toán sớm 50%,Thanh toán sớm 95%,ẢNH 3D,Mặt bằng SVG,Layout,Diễn họa,Tọa độ X,Tọa độ Y,Bước nhảy
+1,R,7,1,R.07.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.784,7.720.000.000,6.206.412.800,7.052.741.818,5.994.830.545,5.783.248.291,5.571.666.036,toa2.jpg,7.svg,JS1.png,5.jpg,70.1,65.8,1.5
+2,R,7,2,R.07.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.23,105.484,9.520.000.000,7.722.444.801,8.775.505.456,7.459.179.637,7.195.914.474,6.932.649.310,toa1.jpg,7.svg,JS2.png,1.jpg,68.6,65,1.5
+3,R,7,3,R.07.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,65.2,65,1.5
+4,R,7,3A,R.07.03A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,62.7,64.9,1.5
+5,R,7,5,R.07.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,60.6,64.9,1.5
+6,R,7,6,R.07.06,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,58.2,64.9,1.5
+7,R,7,06A,R.07.06A,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,4.800.000.000,3.747.072.000,4.258.036.364,3.619.330.910,3.491.589.818,3.363.848.727,toa1.jpg,7.svg,st1.png,3.jpg,55.8,64.9,1.5
+8,R,7,8,R.07.08,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,53.4,64.8,1.5
+9,R,7,9,R.07.09,STANDARD KING,Studio,ĐN,7.312,46.513,50.767,4.840.000.000,3.780.761.600,4.296.320.000,3.651.872.000,3.522.982.400,3.394.092.800,toa1.jpg,7.svg,st1.png,3.jpg,51.1,64.8,1.5
+10,R,7,10,R.07.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st2.png,4.jpg,48.8,64.8,1.5
+11,R,7,11,R.07.11,STANDARD KING,Studio,ĐN,,38.425,42.718,4.550.000.000,3.536.512.000,4.018.763.636,3.415.949.091,3.295.386.182,3.174.823.273,toa1.jpg,7.svg,st1.png,3.jpg,46.2,64.7,1.5
+12,R,7,12,R.07.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st2.png,4.jpg,43.3,64.7,1.5
+13,R,7,12A,R.07.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,40.2,64.7,1.5
+14,R,7,12B,R.07.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,7.svg,st1.png,3.jpg,37.3,64.6,1.5
+15,R,7,15,R.07.15,JUNIOR SUITE,1PN,ĐN - TN,,61.25,68.124,8.360.000.000,6.745.446.400,7.665.280.000,6.515.488.000,6.285.529.600,6.055.571.200,toa1.jpg,7.svg,JS3.png,2.jpg,33.2,64.6,1.5
+16,R,8,1,R.08.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,8.svg,JS1.png,5.jpg,70.1,65.8,1.5
+17,R,8,2,R.08.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,8.svg,JS2.png,1.jpg,68.6,65,1.5
+18,R,8,3,R.08.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,65.2,65,1.5
+19,R,8,3A,R.08.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,62.7,64.9,1.5
+20,R,8,5,R.08.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,60.6,64.9,1.5
+21,R,8,6,R.08.06,STANDARD TWIN,Studio,ĐN,6.804,45.234,49.559,5.020.000.000,3.932.364.800,4.468.596.364,3.798.306.910,3.664.249.018,3.530.191.127,toa1.jpg,8.svg,st2.png,4.jpg,58.2,64.9,1.5
+22,R,8,06A,R.08.06A,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,5.080.000.000,3.982.899.200,4.526.021.818,3.847.118.545,3.711.337.891,3.575.557.236,toa1.jpg,8.svg,st1.png,3.jpg,55.8,64.9,1.5
+23,R,8,8,R.08.08,HOLL TWIN,Studio,ĐN,6.8,45.897,50.279,5.100.000.000,3.999.744.000,4.545.163.636,3.863.389.091,3.727.034.182,3.590.679.273,toa1.jpg,8.svg,st2.png,4.jpg,53.4,64.8,1.5
+24,R,8,9,R.08.09,STANDARD KING,Studio,ĐN,6.78,45.876,50.235,5.140.000.000,4.033.433.601,4.583.447.274,3.895.930.182,3.758.426.764,3.620.923.345,toa1.jpg,8.svg,st1.png,3.jpg,51.1,64.8,1.5
+25,R,8,10,R.08.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,48.8,64.8,1.5
+26,R,8,11,R.08.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,46.2,64.7,1.5
+27,R,8,12,R.08.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,43.3,64.7,1.5
+28,R,8,12A,R.08.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,40.2,64.7,1.5
+29,R,8,12B,R.08.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,37.3,64.6,1.5
+30,R,8,15,R.08.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,8.svg,JS3.png,2.jpg,33.2,64.6,1.5
+31,R,9,1,R.09.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,8.svg,JS1.png,5.jpg,70.1,65.8,1.5
+32,R,9,2,R.09.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,8.svg,JS2.png,1.jpg,68.6,65,1.5
+33,R,9,3,R.09.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,65.2,65,1.5
+34,R,9,3A,R.09.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,62.7,64.9,1.5
+35,R,9,5,R.09.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,60.6,64.9,1.5
+36,R,9,6,R.09.06,STANDARD TWIN,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,58.2,64.9,1.5
+37,R,9,06A,R.09.06A,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,55.8,64.9,1.5
+38,R,9,8,R.09.08,HOLL TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,53.4,64.8,1.5
+39,R,9,9,R.09.09,STANDARD KING,Studio,ĐN,6.78,45.876,50.235,5.060.000.000,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,51.1,64.8,1.5
+40,R,9,10,R.09.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,48.8,64.8,1.5
+41,R,9,11,R.09.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,46.2,64.7,1.5
+42,R,9,12,R.09.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st2.png,4.jpg,43.3,64.7,1.5
+43,R,9,12A,R.09.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,40.2,64.7,1.5
+44,R,9,12B,R.09.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,8.svg,st1.png,3.jpg,37.3,64.6,1.5
+45,R,9,15,R.09.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,8.svg,JS3.png,2.jpg,33.2,64.6,1.5
+46,R,10,1,R.10.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+47,R,10,2,R.10.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+48,R,10,3,R.10.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+49,R,10,3A,R.10.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+50,R,10,5,R.10.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+51,R,10,6,R.10.06,STANDARD TWIN,Studio,ĐN,6.804,45.234,49.559,5.000.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,58.2,64.9,1.5
+52,R,10,6A,R.10.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+53,R,10,8,R.10.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+54,R,10,9,R.10.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+55,R,10,10,R.10.10,STANDARD TWIN,Studio,ĐN,3.991,42.974,47.73,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+56,R,10,11,R.10.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+57,R,10,12,R.10.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+58,R,10,12A,R.10.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+59,R,10,12B,R.10.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+60,R,10,15,R.10.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+61,R,11,1,R.11.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+62,R,11,2,R.11.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+63,R,11,3,R.11.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+64,R,11,3A,R.11.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+65,R,11,5,R.11.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+66,R,11,6,R.11.06,STANDARD TWIN,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,58.2,64.9,1.5
+67,R,11,6A,R.11.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+68,R,11,8,R.11.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+69,R,11,9,R.11.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+70,R,11,10,R.11.10,STANDARD TWIN,Studio,ĐN,4.912,43.895,48.651,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+71,R,11,11,R.11.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+72,R,11,12,R.11.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+73,R,11,12A,R.11.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+74,R,11,12B,R.11.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+75,R,11,15,R.11.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+76,R,12,1,R.12.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+77,R,12,2,R.12.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+78,R,12,3,R.12.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+79,R,12,3A,R.12.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+80,R,12,5,R.12.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+81,R,12,6,R.12.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,5.020.000.000,3.932.364.800,4.468.596.364,3.798.306.910,3.664.249.018,3.530.191.127,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+82,R,12,6A,R.12.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+83,R,12,8,R.12.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+84,R,12,9,R.12.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+85,R,12,10,R.12.10,STANDARD TWIN,Studio,ĐN,5.835,44.818,49.574,5.180.000.000,4.067.123.200,4.621.730.908,3.928.471.273,3.789.819.344,3.651.167.418,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+86,R,12,11,R.12.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+87,R,12,12,R.12.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+88,R,12,12A,R.12.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+89,R,12,12B,R.12.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+90,R,12,15,R.12.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+91,R,12A,1,R.12A.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,8.000.000.000,6.442.240.001,7.320.727.274,6.222.618.182,6.002.996.364,5.783.374.545,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+92,R,12A,2,R.12A.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+93,R,12A,3,R.12A.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+94,R,12A,3A,R.12A.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+95,R,12A,5,R.12A.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+96,R,12A,6,R.12A.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,4.980.000.000,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+97,R,12A,6A,R.12A.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+98,R,12A,8,R.12A.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,5.060.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+99,R,12A,9,R.12A.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.060.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+100,R,12A,10,R.12A.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+101,R,12A,11,R.12A.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+102,R,12A,12,R.12A.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+103,R,12A,12A,R.12A.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+104,R,12A,12B,R.12A.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+105,R,12A,15,R.12A.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,9.010.000.000,7.292.902.400,8.287.389.092,7.044.280.727,6.795.659.056,6.547.037.382,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+106,R,12B,1,R.12B.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,8.090.000.000,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+107,R,12B,2,R.12B.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,10.150.000.000,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+108,R,12B,3,R.12B.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+109,R,12B,4,R.12B.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+110,R,12B,5,R.12B.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+111,R,12B,6,R.12B.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,5.060.000.000,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+112,R,12B,6A,R.12B.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+113,R,12B,8,R.12B.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,5.140.000.000,4.033.433.601,4.583.447.274,3.895.930.182,3.758.426.764,3.620.923.345,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+114,R,12B,9,R.12B.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.140.000.000,4.033.433.601,4.583.447.274,3.895.930.182,3.758.426.764,3.620.923.345,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+115,R,12B,10,R.12B.10,STANDARD TWIN,Studio,ĐN,6.212,45.195,49.951,5.210.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+116,R,12B,11,R.12B.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+117,R,12B,12,R.12B.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+118,R,12B,12A,R.12B.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+119,R,12B,12B,R.12B.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+120,R,12B,15,R.12B.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,9.010.000.000,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+121,R,15,1,R.15.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+122,R,15,2,R.15.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+123,R,15,3,R.15.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+124,R,15,4,R.15.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+125,R,15,5,R.15.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+126,R,15,6,R.15.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,5.100.000.000,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+127,R,15,06A,R.15.06A,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,5.150.000.000,4.041.856.000,4.593.018.182,3.904.065.455,3.766.274.910,3.628.484.364,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+128,R,15,8,R.15.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,5.180.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+129,R,15,9,R.15.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.260.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+130,R,15,10,R.15.10,STANDARD TWIN,Studio,ĐN,6.212,45.195,49.951,5.420.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+131,R,15,11,R.15.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+132,R,15,12,R.15.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+133,R,15,13,R.15.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+134,R,15,14,R.15.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+135,R,15,15,R.15.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+136,R,16,1,R.16.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+137,R,16,2,R.16.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+138,R,16,3,R.16.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+139,R,16,4,R.16.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+140,R,16,5,R.16.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+141,R,16,6,R.16.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+142,R,16,6A,R.16.07,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+143,R,16,8,R.16.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+144,R,16,9,R.16.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+145,R,16,10,R.16.10,STANDARD TWIN,Studio,ĐN,6.212,45.195,49.951,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+146,R,16,11,R.16.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+147,R,16,12,R.16.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+148,R,16,12A,R.16.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+149,,,12B,R.16.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+150,R,16,15,R.16.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+151,R,17,1,R.17.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,8.140.000.000,6.560.153.600,7.454.720.000,6.336.512.000,6.112.870.400,5.889.228.800,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+152,R,17,2,R.17.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,10.150.000.000,8.253.055.999,9.378.472.726,7.971.701.818,7.690.347.636,7.408.993.455,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+153,R,17,3,R.17.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+154,R,17,3A,R.17.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+155,R,17,5,R.17.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+156,R,17,6,R.17.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,5.150.000.000,4.041.856.000,4.593.018.182,3.904.065.455,3.766.274.910,3.628.484.364,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+157,R,17,06A,R.17.06A,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,5.210.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+158,R,17,8,R.17.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,5.240.000.000,4.117.657.600,4.679.156.364,3.977.282.910,3.836.908.218,3.696.533.527,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+159,R,17,9,R.17.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.240.000.000,4.117.657.600,4.679.156.364,3.977.282.910,3.836.908.218,3.696.533.527,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+160,R,17,10,R.17.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+161,R,17,11,R.17.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+162,R,17,12,R.17.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+163,R,17,12A,R.17.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+164,R,17,12B,R.17.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+165,R,17,15,R.17.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,9.190.000.000,7.444.505.601,8.459.665.456,7.190.715.637,6.936.925.674,6.683.135.710,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+166,R,18,1,R.18.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+167,R,18,2,R.18.02,JUNIOR SUITE,1PN,ĐN - ĐB,34.174,96.666,105.484,,,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+168,R,18,3,R.18.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+169,R,18,3A,R.18.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+170,R,18,5,R.18.05,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+171,R,18,6,R.18.06,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,5.330.000.000,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+172,R,18,6A,R.18.06A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+173,R,18,8,R.18.08,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+174,R,18,9,R.18.09,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.420.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+175,R,18,10,R.18.10,STANDARD TWIN,Studio,ĐN,6.212,45.195,49.951,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+176,R,18,11,R.18.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+177,R,18,12,R.18.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+178,R,18,12A,R.18.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+179,R,18,12B,R.18.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+180,R,18,15,R.18.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+181,R,20,1,R.20.01,SUITE 2BR,2PN,ĐN,20.412,140.717,151.108,18.090.000.000,14.743.321.599,16.753.774.544,14.240.708.363,13.738.095.126,13.235.481.891,toa1.jpg,20.svg,S2b.png,11.jpg,55.8,43.8,0
+182,R,20,2,R.20.02,SUITE 2BR,2PN,ĐN,12.862,132.361,144.077,17.970.000.000,14.642.252.800,16.638.923.636,14.143.085.091,13.643.917.382,13.144.749.673,toa1.jpg,20.svg,S2c.png,11.jpg,49.1,43.6,0
+183,R,20,3,R.20.03,SUITE 2BR,2PN,ĐN,,113.81,124.161,,,,,,,toa1.jpg,20.svg,S2d.png,11.jpg,40,43.3,0
+184,R,20,03A,R.20.03A,JUNIOR SUITE,1PN,ĐN - TN,,61.773,68.624,9.470.000.000,,,,,,toa1.jpg,20.svg,JS3.png,2.jpg,33.1,43,0
+185,R,20,5,R.20.05,SUITE 1BR,1PN,TN - TB,37.233,118.447,130.829,,,,,,,toa1.jpg,20.svg,S1.png,10.jpg,29.6,43.3,0
+186,R,21,1,R.21.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,"8,386,947,976",,,,,,toa2.jpg,9.svg,JS1.png,5.jpg,70.1,65.8,1.5
+187,R,21,2,R.21.02,JUNIOR SUITE,1PN,ĐN - TN,34.174,96.666,105.484,"10,685,132,128",,,,,,toa1.jpg,9.svg,JS2.png,1.jpg,68.6,65,1.5
+188,R,21,3,R.21.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,65.2,65,1.5
+189,R,21,3A,R.21.03A,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,62.7,64.9,1.5
+190,R,21,5,R.21.05,STANDARD KING,Studio,ĐN,,,,5.490.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,60.6,64.9,1.5
+191,R,21,6,R.21.06,SPE. STANDARD,Studio,ĐN,6.809,45.239,49.564,5.550.000.000,,,,,,toa1.jpg,9.svg,st2.png,9.jpg,58.2,64.9,1.5
+192,R,21,06A,R.21.06A,STANDARD KING,Studio,ĐN,6.804,45.676,50.036,5.580.000.000,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,55.8,64.9,1.5
+193,R,21,8,R.21.08,STANDARD TWIN,Studio,ĐN,6.801,45.898,50.28,5.580.000.000,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,53.4,64.8,1.5
+194,R,21,9,R.21.09,STANDARD KING,Studio,ĐN,6.8,45.896,50.255,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,51.1,64.8,1.5
+195,R,21,10,R.21.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,48.8,64.8,1.5
+196,R,21,11,R.21.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,46.2,64.7,1.5
+197,R,21,12,R.21.12,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st2.png,4.jpg,43.3,64.7,1.5
+198,R,21,12A,R.21.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,40.2,64.7,1.5
+199,R,21,12B,R.21.12B,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,9.svg,st1.png,3.jpg,37.3,64.6,1.5
+200,R,21,15,R.21.15,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,9.svg,JS3.png,2.jpg,33.2,64.6,1.5
+201,R,22,1,R.22.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,22.svg,JS1.png,5.jpg,70.4,36 (Tầng 22),1.5
+202,R,22,2,R.22.02,SUITE 2BR,2PN,ĐN - ĐB,41.667,145.065,155.731,,,,,,,toa1.jpg,22.svg,S2a.png,12.jpg,67.5,41.2 (Tầng 22),1.5
+203,R,22,3,R.22.03,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st2.png,4.jpg,62.8,39.2 (Tầng 22),1.5
+204,R,22,3A,R.22.03A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,60.6,39.1 (Tầng 22),1.5
+205,R,22,5,R.22.05,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,22.svg,st3.png,9.jpg,58.2,39  (Tầng 22),1.5
+206,R,22,6,R.22.06,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,55.8,38.9 (Tầng 22),1.5
+207,R,22,06A,R.22.06A,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,22.svg,st2.png,4.jpg,53.2,38.8 (Tầng 22),1.5
+208,R,22,8,R.22.08,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,51.1,38.7 (Tầng 22),1.5
+209,R,22,9,R.22.09,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st2.png,4.jpg,49,38.6 (Tầng 22),1.5
+210,R,22,10,R.22.10,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,46.2,38.5 (Tầng 22),1.5
+211,R,22,11,R.22.11,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st2.png,4.jpg,43.5,38.4 (Tầng 22),1.5
+212,R,22,12,R.22.12,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,40.3,38.3 (Tầng 22),1.5
+213,R,22,12A,R.22.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,22.svg,st1.png,3.jpg,37.3,38.2 (Tầng 22),1.5
+214,R,22,12B,R.22.12B,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,22.svg,JS3.png,2.jpg,33,38.1 (Tầng 22),1.5
+215,R,23,1,R.23.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,23.svg,JS1.png,5.jpg,70.4,36 (Tầng 22),1.5
+216,R,23,2,R.23.02,SUITE 2BR,2PN,ĐN - ĐB,41.667,145.065,155.731,,,,,,,toa1.jpg,23.svg,S2a.png,12.jpg,67.5,41.2 (Tầng 22),1.5
+217,R,23,3,R.23.03,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,62.8,39.2 (Tầng 22),1.5
+218,R,23,3A,R.23.03A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,60.6,39.1 (Tầng 22),1.5
+219,R,23,5,R.23.05,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,23.svg,st3.png,9.jpg,58.2,39  (Tầng 22),1.5
+220,R,23,6,R.23.06,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,55.8,38.9 (Tầng 22),1.5
+221,R,23,06A,R.23.06A,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,53.2,38.8 (Tầng 22),1.5
+222,R,23,8,R.23.08,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,51.1,38.7 (Tầng 22),1.5
+223,R,23,9,R.23.09,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,49,38.6 (Tầng 22),1.5
+224,R,23,10,R.23.10,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,46.2,38.5 (Tầng 22),1.5
+225,R,23,11,R.23.11,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,43.5,38.4 (Tầng 22),1.5
+226,R,23,12,R.23.12,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,40.3,38.3 (Tầng 22),1.5
+227,R,23,12A,R.23.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,37.3,38.2 (Tầng 22),1.5
+228,R,23,12B,R.23.12B,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,23.svg,JS3.png,2.jpg,33,38.1 (Tầng 22),1.5
+229,R,23,15,R.23.15,SUITE 1BR,1PN,TN - TB,36.969,118.183,130.66,,,,,,,toa1.jpg,23.svg,S1.png,10.jpg,29.6,39.8 (Tầng 23),1.5
+230,R,24,1,R.24.01,JUNIOR SUITE,1PN,ĐB - TB,30.345,92.192,98.835,,,,,,,toa2.jpg,23.svg,JS1.png,5.jpg,70.4,36 (Tầng 22),1.5
+231,R,24,2,R.24.02,SUITE 2BR,2PN,ĐN - ĐB,41.667,145.065,155.731,18.180.000.000,,,,,,toa1.jpg,23.svg,S2a.png,12.jpg,67.5,41.2 (Tầng 22),1.5
+232,R,24,3,R.24.03,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,62.8,39.2 (Tầng 22),1.5
+233,R,24,3A,R.24.03A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,60.6,39.1 (Tầng 22),1.5
+234,R,24,5,R.24.05,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,23.svg,st3.png,9.jpg,58.2,39  (Tầng 22),1.5
+235,R,24,6,R.24.06,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,55.8,38.9 (Tầng 22),1.5
+236,R,24,06A,R.24.06A,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,53.2,38.8 (Tầng 22),1.5
+237,R,24,8,R.24.08,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,5.580.000.000,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,51.1,38.7 (Tầng 22),1.5
+238,R,24,9,R.24.09,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,49,38.6 (Tầng 22),1.5
+239,R,24,10,R.24.10,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,46.2,38.5 (Tầng 22),1.5
+240,R,24,11,R.24.11,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st2.png,4.jpg,43.5,38.4 (Tầng 22),1.5
+241,R,24,12,R.24.12,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,40.3,38.3 (Tầng 22),1.5
+242,R,24,12A,R.24.12A,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,23.svg,st1.png,3.jpg,37.3,38.2 (Tầng 22),1.5
+243,R,24,12B,R.24.12B,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,23.svg,JS3.png,2.jpg,33,38.1 (Tầng 22),1.5
+244,R,24,15,R.24.15,SUITE 1BR,1PN,TN - TB,36.969,118.183,130.66,,,,,,,toa1.jpg,23.svg,S1.png,10.jpg,29.6,39.8 (Tầng 23),1.5
+245,R,25,1,R.25.01,SUITE 3BR,3PN,ĐN - ĐB - TB,72.012,245.916,262.107,,,,,,,toa1.jpg,25.svg,3BR.png,11.jpg,67.6,36.3,0
+246,R,25,2,R.25.02,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st2.png,4.jpg,62.8,39.2 (Tầng 22),1.5
+247,R,25,3,R.25.03,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,60.6,39.1 (Tầng 22),1.5
+248,R,25,03A,R.25.03A,SPE. STANDARD,Studio,ĐN,6.804,45.234,49.559,,,,,,,toa1.jpg,25.svg,st3.png,9.jpg,58.2,39  (Tầng 22),1.5
+249,R,25,5,R.25.05,STANDARD KING,Studio,ĐN,6.801,45.673,50.033,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,55.8,38.9 (Tầng 22),1.5
+250,R,25,6,R.25.06,STANDARD TWIN,Studio,ĐN,6.8,45.897,50.279,,,,,,,toa1.jpg,25.svg,st2.png,4.jpg,53.2,38.8 (Tầng 22),1.5
+251,R,25,06A,R.25.06A,STANDARD KING,Studio,ĐN,6.795,45.891,50.25,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,51.1,38.7 (Tầng 22),1.5
+252,R,25,8,R.25.08,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st2.png,4.jpg,49,38.6 (Tầng 22),1.5
+253,R,25,9,R.25.09,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,46.2,38.5 (Tầng 22),1.5
+254,R,25,10,R.25.10,STANDARD TWIN,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st2.png,4.jpg,43.5,38.4 (Tầng 22),1.5
+255,R,25,11,R.25.11,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,40.3,38.3 (Tầng 22),1.5
+256,R,25,12,R.25.12,STANDARD KING,Studio,ĐN,,,,,,,,,,toa1.jpg,25.svg,st1.png,3.jpg,37.3,38.2 (Tầng 22),1.5
+257,R,25,12A,R.25.12A,JUNIOR SUITE,1PN,ĐN - TN,,61.77,68.626,,,,,,,toa1.jpg,25.svg,JS3.png,2.jpg,33,38.1 (Tầng 22),1.5
+258,R,26,1,R.26.01,DUPLEX SUITE,DUPLEX,ĐN - ĐB - TB,72.012,248.848,378.819,,,,,,,toa1.jpg,26.svg,D1a.png,8.jpg,67,34.2,0
+259,R,26,2,R.26.02,DUPLEX JUNIOR SUITE,DUPLEX,ĐN,13.602,91.854,132.141,,,,,,,toa1.jpg,26.svg,D1b.png,6.jpg,61.7,33.6,0
+260,R,26,3,R.26.03,DUPLEX JUNIOR SUITE,DUPLEX,ĐN,13.602,94.608,152.174,,,,,,,toa1.jpg,26.svg,D1b.png,6.jpg,57,33.4,0
+261,R,26,03A,R.26.03A,DUPLEX JUNIOR SUITE,DUPLEX,ĐN,13.671,95.571,153.823,25.710.000.000,,,,,,toa1.jpg,26.svg,D1b.png,6.jpg,52.3,33.1,0
+262,R,26,5,R.26.05,DUPLEX JUNIOR SUITE,DUPLEX,ĐN,6.122,85.639,152.442,,,,,,,toa1.jpg,26.svg,D1c.png,6.jpg,47.5,32.9,0
+263,R,26,6,R.26.06,DUPLEX JUNIOR SUITE,DUPLEX,ĐN,,76.552,138.485,,,,,,,toa1.jpg,26.svg,D1d.png,6.jpg,41.8,32.7,0
+264,R,26,06A,R.26.06A,DUPLEX SUITE,DUPLEX,ĐN - TN,,122.465,203.468,,,,,,,toa1.jpg,26.svg,D1a.png,7.jpg,34.3,32.4,0
+265,R,27,1,R.27.01,PENHOUSE,PENHOUSE,,,,,,,,,,,toa1.jpg,27.svg,x.png,xx.png,59.5,27.4,0
+266,R,27,2,R.27.02,PENHOUSE,PENHOUSE,,,,,,,,,,,toa1.jpg,27.svg,x.png,xx.png,43.5,26.6,0
