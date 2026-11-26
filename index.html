@@ -23,7 +23,7 @@
 <div class="app-wrapper">
     <!-- KHUNG HIỂN THỊ CHÍNH VỪA KHÍT 1 MÀN HÌNH -->
     <div class="viewport-stage">
-        <!-- THANH CÔNG CỤ PHÍA TRÊN (NẰM SÁT PHÍA TRÊN MÀN HÌNH) -->
+        <!-- THANH CÔNG CỤ PHÍA TRÊN -->
         <header class="top-toolbar">
             <div class="toolbar-left">
                 <div class="search-pill">
@@ -33,8 +33,19 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </button>
-                    <input type="text" id="searchInput" placeholder="Nhập mã căn: Ví dụ R.12.13" autocomplete="off" spellcheck="false">
+                    <input type="text" id="searchInput" placeholder="Nhập mã căn: VD R.12.06 hoặc R.12A.06" autocomplete="off" spellcheck="false">
                 </div>
+
+                <button type="button" id="btnInventory" class="btn-toolbar btn-inventory" onclick="openInventoryModal()" title="Xem danh sách quỹ căn đang mở bán giai đoạn này">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Xem quỹ căn</span>
+                    <span id="openUnitsCountBadge" class="inv-count-pill">0</span>
+                </button>
 
                 <button type="button" id="btnExport" class="btn-toolbar btn-export" onclick="exportImage()" title="Tải xuống ảnh báo giá chất lượng cao" style="display: none;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -58,10 +69,10 @@
             </div>
         </header>
 
-        <!-- KHUNG THẺ CHÍNH (XẾP ĐÚNG VỊ TRÍ CỘT SẴN, CHỈ HIỆN ẢNH TÒA NHÀ KHI MỚI VÀO) -->
+        <!-- KHUNG THẺ CHÍNH -->
         <main id="exportContainer" class="main-card is-empty-state">
             <div class="card-grid">
-                <!-- CỘT TRÁI: MÃ CĂN + THÔNG TIN TÓM TẮT + PHỐI CẢNH 3D TÒA NHÀ -->
+                <!-- CỘT TRÁI -->
                 <section class="left-column">
                     <div id="unitHeaderBlock" class="unit-header-block">
                         <div class="unit-code-row">
@@ -75,7 +86,6 @@
                         <img id="img3D" src="images/toa1.jpg" alt="Phối cảnh tòa nhà Radisson Collection Ha Long Bay" draggable="false" onerror="handleImageFallback(this, '3d')">
                         <div id="placeholder3D" class="image-placeholder" style="display: none;">Chưa có ảnh phối cảnh tòa nhà</div>
 
-                        <!-- ĐIỂM CHẤM ĐỎ + ĐƯỜNG DẪN + NHÃN MÃ CĂN -->
                         <div id="marker3DWrapper" class="marker-3d-wrapper" style="display: none;">
                             <span class="marker-dot"></span>
                             <span class="marker-line"></span>
@@ -84,12 +94,12 @@
                     </div>
                 </section>
 
-                <!-- CỘT PHẢI: MẶT BẰNG TẦNG + THÔNG SỐ & GIÁ PTTT + LAYOUT & DIỄN HỌA NỘI THẤT -->
+                <!-- CỘT PHẢI -->
                 <section id="rightColumn" class="right-column">
-                    <!-- KHU VỰC 1: MẶT BẰNG TẦNG SVG (CĂN GIỮA 2 ẢNH LAYOUT & DIỄN HỌA) -->
+                    <!-- KHU VỰC 1: MẶT BẰNG TẦNG SVG -->
                     <div class="floorplan-section" id="floorplanBox">
                         <div id="svgContainer" class="svg-container">
-                            <div class="image-placeholder">Nhập mã căn để hiển thị mặt bằng tầng</div>
+                            <div class="image-placeholder">Nhập mã căn hoặc bấm "Xem quỹ căn" để hiển thị</div>
                         </div>
                         <div id="svgCalloutBadge" class="svg-callout-badge" style="display: none;">
                             <span id="lblMaCanSvg" class="svg-callout-pill">---</span>
@@ -129,7 +139,7 @@
                 </section>
             </div>
 
-            <!-- WATERMARK CHỈ HIỆN KHI XUẤT ẢNH: MỞ RỘNG THẺ XUỐNG DƯỚI ĐỂ KHÔNG CHÈN LÊN ẢNH/TEXT -->
+            <!-- WATERMARK CHỈ HIỆN KHI XUẤT ẢNH -->
             <div id="watermarkOverlayCenter" class="watermark-overlay-center" style="display: none;">
                 <img class="wm-logo-img" src="images/logo.svg" alt="An Việt Property">
                 <img class="wm-logo-img" src="images/logo.svg" alt="An Việt Property">
@@ -144,7 +154,7 @@
         </main>
     </div>
 
-    <!-- CHÂN TRANG (CHỈ HIỆN KHI KÉO TRANG XUỐNG) -->
+    <!-- CHÂN TRANG -->
     <footer class="site-footer">
         <img src="images/logo.svg" alt="An Việt Property" class="footer-logo" draggable="false" onerror="this.style.display='none'">
         <div class="footer-project-name">ĐÁNH DẤU QUỸ CĂN TỰ ĐỘNG RADISSON COLLECTION HA LONG BAY</div>
@@ -156,7 +166,47 @@
     </footer>
 </div>
 
-<!-- POPUP 1: LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT NỘI THẤT (HỖ TRỢ DUPLEX) -->
+<!-- POPUP 0: BẢNG QUỸ CĂN MỞ BÁN GIAI ĐOẠN NÀY -->
+<div id="modalInventory" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalInventory')">
+    <div class="inventory-dialog">
+        <div class="inventory-header">
+            <div class="inventory-title-group">
+                <h2 class="inventory-title">QUỸ CĂN MỞ BÁN GIAI ĐOẠN NÀY</h2>
+                <span id="invResultSummary" class="inventory-subtitle">Đang tải danh sách...</span>
+            </div>
+            <button type="button" class="modal-close-circle inv-close-btn" onclick="closeInventoryModal()" title="Đóng">&times;</button>
+        </div>
+
+        <div class="inventory-filters">
+            <input type="text" id="invSearchInput" class="inv-filter-input" placeholder="Tìm nhanh mã căn (VD: 12A, 06, R.07)..." oninput="filterInventoryTable()" autocomplete="off">
+            <select id="invFilterFloor" class="inv-filter-select" onchange="filterInventoryTable()">
+                <option value="">Tất cả tầng</option>
+            </select>
+            <select id="invFilterType" class="inv-filter-select" onchange="filterInventoryTable()">
+                <option value="">Tất cả loại hình</option>
+            </select>
+        </div>
+
+        <div class="inventory-table-wrap">
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th class="inv-col-stt">STT</th>
+                        <th>Mã căn</th>
+                        <th>Loại hình</th>
+                        <th>Hướng</th>
+                        <th class="inv-col-area">Diện tích</th>
+                        <th class="inv-col-price">Giá trần</th>
+                        <th class="inv-col-action">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP 1: LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT NỘI THẤT -->
 <div id="imageLightbox" class="modal-overlay" onclick="closeLightboxOnBackdrop(event)">
     <div class="lightbox-dialog">
         <div class="lightbox-topbar">
@@ -184,7 +234,7 @@
     </div>
 </div>
 
-<!-- POPUP 3: 360 ĐỘ DIỄN HỌA (THÔNG BÁO ĐANG HOÀN THIỆN) -->
+<!-- POPUP 3: 360 ĐỘ DIỄN HỌA -->
 <div id="modal360Render" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modal360Render')">
     <div class="notice-dialog">
         <button type="button" class="modal-close-circle notice-close" onclick="close360RenderModal()" title="Đóng">&times;</button>
