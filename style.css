@@ -1,11 +1,10 @@
-
 :root {
     --pill-orange: #f9a363;
     --pill-gold: #f8be62;
     --text-dark: #181512;
     --text-muted: #4a423b;
-    --card-radius: clamp(16px, 1.6vw, 24px);
-    --inner-radius: clamp(10px, 1vw, 16px);
+    --card-radius: clamp(18px, 1.8vw, 26px);
+    --inner-radius: clamp(12px, 1.1vw, 18px);
 }
 
 * {
@@ -20,6 +19,7 @@ html, body {
     -ms-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -31,17 +31,26 @@ body {
     background-attachment: fixed;
     color: var(--text-dark);
     min-height: 100vh;
-    padding: clamp(10px, 1.3vw, 18px) clamp(14px, 2.4vw, 36px);
+    padding: 0 clamp(14px, 2.2vw, 32px) 24px;
     overflow-x: hidden;
 }
 
 .app-wrapper {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1380px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: clamp(10px, 1.1vw, 15px);
+}
+
+/* KHUNG ĐẦU TRANG: CỤM TÌM KIẾM + NÚT BẤM + CARD VỪA KHÍT TRỌN 1 MÀN HÌNH */
+.viewport-stage {
+    min-height: 100vh;
+    padding: clamp(10px, 1.2vh, 18px) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(12px, 1.3vh, 18px);
 }
 
 /* ================= THANH CÔNG CỤ PHÍA TRÊN ================= */
@@ -49,7 +58,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
@@ -57,29 +66,29 @@ body {
 .toolbar-right {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 0.9vw, 12px);
+    gap: clamp(10px, 1vw, 14px);
     flex-wrap: wrap;
 }
 
 .search-pill {
     display: flex;
     align-items: center;
-    gap: 8px;
-    width: clamp(235px, 24vw, 330px);
-    height: clamp(36px, 2.7vw, 42px);
-    padding: 0 16px;
+    gap: 10px;
+    width: clamp(260px, 25vw, 360px);
+    height: clamp(40px, 4.4vh, 46px);
+    padding: 0 18px;
     border-radius: 999px;
-    border: 1.5px solid rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.16);
+    border: 1.5px solid rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
 .search-pill:focus-within {
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.3);
     border-color: #ffffff;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
 }
 
 .search-icon-btn {
@@ -100,8 +109,9 @@ body {
     background: transparent;
     color: #ffffff;
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(12.5px, 0.92vw, 14px);
-    font-weight: 600;
+    font-size: clamp(13.5px, 1vw, 15px);
+    font-weight: 700;
+    letter-spacing: 0.3px;
     outline: none;
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -112,22 +122,23 @@ body {
 #searchInput::placeholder {
     color: rgba(255, 255, 255, 0.88);
     font-weight: 500;
+    letter-spacing: 0;
 }
 
 .btn-toolbar {
-    height: clamp(36px, 2.7vw, 42px);
-    padding: 0 clamp(14px, 1.5vw, 22px);
+    height: clamp(40px, 4.4vh, 46px);
+    padding: 0 clamp(16px, 1.6vw, 24px);
     border-radius: 999px;
-    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    border: 1.5px solid rgba(255, 255, 255, 0.88);
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(12.5px, 0.92vw, 14px);
+    font-size: clamp(13px, 0.98vw, 14.5px);
     font-weight: 700;
     color: var(--text-dark);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
+    gap: 8px;
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
     white-space: nowrap;
 }
@@ -151,25 +162,25 @@ body {
 }
 
 .btn-export {
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.9);
     color: var(--text-dark);
 }
 
 .status-toast {
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 700;
     color: #ffffff;
-    background: rgba(24, 21, 18, 0.48);
-    padding: 5px 12px;
+    background: rgba(24, 21, 18, 0.5);
+    padding: 6px 14px;
     border-radius: 999px;
     backdrop-filter: blur(8px);
 }
 
-/* ================= THẺ CHÍNH (GỌN GÀNG VỪA KHÍT 1 MÀN HÌNH) ================= */
+/* ================= THẺ CHÍNH (PHÓNG TO VỪA KHÍT MÀN HÌNH) ================= */
 .main-card {
     width: 100%;
     border-radius: var(--card-radius);
-    padding: clamp(16px, 1.8vw, 24px) clamp(18px, 2.2vw, 30px);
+    padding: clamp(18px, 2.2vh, 28px) clamp(20px, 2.4vw, 34px);
     background-color: #fdf7ee;
     background-image:
         url('images/card.png'),
@@ -177,7 +188,7 @@ body {
     background-size: 100% 100%, cover;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
-    box-shadow: 0 18px 46px rgba(45, 22, 10, 0.22);
+    box-shadow: 0 20px 50px rgba(45, 22, 10, 0.24);
     position: relative;
     overflow: hidden;
 }
@@ -185,17 +196,32 @@ body {
 .card-grid {
     display: grid;
     grid-template-columns: 0.72fr 1.28fr;
-    gap: clamp(16px, 2vw, 28px);
+    gap: clamp(18px, 2.2vw, 32px);
     align-items: stretch;
     position: relative;
     z-index: 2;
+}
+
+/* TRẠNG THÁI BAN ĐẦU: CHỈ HIỆN DUY NHẤT ẢNH TÒA NHÀ */
+.main-card.is-empty-state .card-grid {
+    grid-template-columns: minmax(320px, 500px);
+    justify-content: center;
+}
+
+.main-card.is-empty-state .unit-header-block,
+.main-card.is-empty-state .right-column {
+    display: none !important;
+}
+
+.main-card.is-empty-state .building-3d-card {
+    height: clamp(460px, 76vh, 690px);
 }
 
 /* ================= CỘT TRÁI ================= */
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: clamp(10px, 1.1vw, 14px);
+    gap: clamp(12px, 1.3vh, 16px);
     position: relative;
     z-index: 3;
 }
@@ -203,18 +229,18 @@ body {
 .unit-header-block {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.7vw, 10px);
+    gap: clamp(6px, 0.8vh, 10px);
 }
 
 .unit-code-row {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 0.9vw, 12px);
+    gap: clamp(10px, 1vw, 14px);
     flex-wrap: wrap;
 }
 
 .unit-code-label {
-    font-size: clamp(18px, 1.65vw, 24px);
+    font-size: clamp(20px, 1.8vw, 27px);
     font-weight: 700;
     color: var(--text-dark);
     letter-spacing: -0.3px;
@@ -223,9 +249,9 @@ body {
 .unit-code-pill {
     background-color: var(--pill-orange);
     color: var(--text-dark);
-    font-size: clamp(17px, 1.55vw, 23px);
+    font-size: clamp(19px, 1.7vw, 26px);
     font-weight: 800;
-    padding: clamp(3px, 0.35vw, 5px) clamp(15px, 1.6vw, 24px);
+    padding: clamp(4px, 0.4vh, 6px) clamp(18px, 1.8vw, 28px);
     border-radius: 999px;
     letter-spacing: 0.3px;
     line-height: 1.2;
@@ -234,8 +260,8 @@ body {
 .top-meta-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    max-width: 245px;
+    gap: 3px;
+    max-width: 270px;
 }
 
 .top-meta-row {
@@ -243,7 +269,7 @@ body {
     justify-content: space-between;
     align-items: baseline;
     gap: 10px;
-    font-size: clamp(11.5px, 0.88vw, 13px);
+    font-size: clamp(12.5px, 0.95vw, 14px);
     color: var(--text-dark);
 }
 
@@ -260,12 +286,12 @@ body {
 /* KHUNG PHỐI CẢNH 3D TÒA NHÀ */
 .building-3d-card {
     flex: 1;
-    min-height: 300px;
+    min-height: clamp(340px, 56vh, 540px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
     background: #2b2725;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
 .building-3d-card img {
@@ -288,8 +314,8 @@ body {
 }
 
 .marker-3d-wrapper .marker-dot {
-    width: clamp(10px, 0.95vw, 14px);
-    height: clamp(10px, 0.95vw, 14px);
+    width: clamp(11px, 1vw, 15px);
+    height: clamp(11px, 1vw, 15px);
     background-color: #d92626;
     border: 2px solid #ffffff;
     border-radius: 50%;
@@ -299,7 +325,7 @@ body {
 }
 
 .marker-3d-wrapper .marker-line {
-    width: clamp(26px, 3vw, 46px);
+    width: clamp(28px, 3.2vw, 50px);
     height: 2px;
     background-color: #ffffff;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
@@ -312,8 +338,8 @@ body {
     color: var(--text-dark);
     border: 1.5px solid #ffffff;
     border-radius: 999px;
-    padding: 2px 11px;
-    font-size: clamp(10.5px, 0.85vw, 12.5px);
+    padding: 2.5px 12px;
+    font-size: clamp(11px, 0.9vw, 13px);
     font-weight: 800;
     white-space: nowrap;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
@@ -338,22 +364,19 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: clamp(10px, 1.1vw, 14px);
+    gap: clamp(12px, 1.3vh, 18px);
     position: relative;
     z-index: 2;
 }
 
-/* MẶT BẰNG TẦNG SVG (MỞ RỘNG NHẸ SANG TRÁI ĐỂ LA BÀN KHỚP ĐÚNG DEMO) */
+/* MẶT BẰNG TẦNG SVG: TO HƠN & CĂN GIỮA TRỰC TIẾP TRÊN 2 ẢNH LAYOUT VÀ DIỄN HỌA */
 .floorplan-section {
     position: relative;
-    width: 111%;
-    margin-left: -11%;
-    aspect-ratio: 2.55 / 1;
-    min-height: 165px;
-    max-height: 215px;
+    width: 100%;
+    height: clamp(210px, 25vh, 280px);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .svg-container {
@@ -361,12 +384,13 @@ body {
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .svg-container svg {
     width: 100% !important;
     height: 100% !important;
+    max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     display: block;
@@ -384,11 +408,11 @@ body {
     display: inline-block;
     background-color: var(--pill-orange);
     color: var(--text-dark);
-    font-size: clamp(10.5px, 0.85vw, 12.5px);
+    font-size: clamp(11px, 0.9vw, 13px);
     font-weight: 800;
-    padding: 2px 13px;
+    padding: 2.5px 14px;
     border-radius: 999px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
     white-space: nowrap;
 }
 
@@ -396,7 +420,7 @@ body {
 .middle-info-grid {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
-    gap: clamp(14px, 1.6vw, 24px);
+    gap: clamp(16px, 1.8vw, 28px);
     align-items: start;
 }
 
@@ -405,13 +429,13 @@ body {
 }
 
 .middle-info-grid.no-payment-card .specs-list {
-    max-width: 440px;
+    max-width: 480px;
 }
 
 .specs-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(5px, 0.55vw, 8px);
+    gap: clamp(6px, 0.7vh, 10px);
     padding-top: 2px;
 }
 
@@ -419,9 +443,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 10px;
-    font-size: clamp(12px, 0.95vw, 13.5px);
-    line-height: 1.3;
+    gap: 12px;
+    font-size: clamp(13px, 1vw, 14.5px);
+    line-height: 1.35;
 }
 
 .spec-label {
@@ -438,77 +462,82 @@ body {
 
 /* BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN */
 .payment-card {
-    background: rgba(255, 255, 255, 0.58);
+    background: rgba(255, 255, 255, 0.6);
     border-radius: var(--inner-radius);
-    padding: clamp(10px, 1.05vw, 14px) clamp(12px, 1.25vw, 18px);
+    padding: clamp(12px, 1.3vh, 16px) clamp(14px, 1.4vw, 20px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
 }
 
 .payment-card-title {
-    font-size: clamp(11px, 0.88vw, 12.5px);
+    font-size: clamp(11.5px, 0.92vw, 13px);
     font-weight: 800;
     color: var(--text-dark);
     text-transform: uppercase;
     letter-spacing: 0.2px;
-    margin-bottom: clamp(7px, 0.75vw, 10px);
+    margin-bottom: clamp(8px, 0.9vh, 12px);
 }
 
 .payment-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(5px, 0.5vw, 7px);
+    gap: clamp(6px, 0.65vh, 9px);
 }
 
 .payment-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    min-height: clamp(23px, 1.9vw, 27px);
+    gap: 10px;
+    min-height: 28px;
     position: relative;
 }
 
 .payment-name {
-    font-size: clamp(11.5px, 0.88vw, 13px);
+    font-size: clamp(12.5px, 0.95vw, 14px);
     font-weight: 600;
     color: var(--text-dark);
 }
 
+/* GIỮ CỐ ĐỊNH KHUNG BAO NÚT GIÁ ĐỂ NÚT (+) VÀ (-) NẰM CÙNG 1 TỌA ĐỘ */
 .payment-pill-wrap {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    min-width: clamp(132px, 11.5vw, 162px);
+    height: 28px;
 }
 
 .payment-price-pill {
     background: linear-gradient(90deg, var(--pill-orange) 0%, var(--pill-gold) 100%);
     color: var(--text-dark);
-    font-size: clamp(12px, 0.96vw, 14px);
+    font-size: clamp(13px, 1.02vw, 15px);
     font-weight: 800;
-    padding: 2.5px clamp(12px, 1.1vw, 16px);
+    padding: 3px clamp(14px, 1.2vw, 18px);
     border-radius: 999px;
-    min-width: clamp(120px, 10.5vw, 148px);
+    width: 100%;
     text-align: center;
     letter-spacing: 0.2px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.15s ease;
 }
 
 .payment-row.is-hidden .payment-price-pill {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .btn-toggle-price {
     position: absolute;
-    top: -5px;
+    top: -4px;
     right: -5px;
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     border: none;
     background-color: #2b241f;
     color: #ffffff;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 800;
     line-height: 1;
     display: flex;
@@ -518,10 +547,6 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
     transition: transform 0.15s ease, background-color 0.15s ease;
     z-index: 5;
-}
-
-.payment-row.is-hidden .btn-toggle-price {
-    position: static;
 }
 
 .btn-toggle-price:hover {
@@ -542,25 +567,24 @@ body {
 .bottom-media-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(14px, 1.6vw, 22px);
+    gap: clamp(16px, 1.8vw, 24px);
 }
 
 .media-block {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
 }
 
 .media-title {
-    font-size: clamp(12px, 0.96vw, 13.5px);
+    font-size: clamp(13px, 1vw, 14.5px);
     font-weight: 600;
     color: var(--text-dark);
 }
 
 .media-card {
     width: 100%;
-    aspect-ratio: 16 / 8.8;
-    max-height: 165px;
+    height: clamp(145px, 18.5vh, 200px);
     border-radius: var(--inner-radius);
     overflow: hidden;
     position: relative;
@@ -576,7 +600,7 @@ body {
 
 .layout-card {
     background-color: #ffffff;
-    padding: clamp(6px, 0.8vw, 10px);
+    padding: clamp(8px, 0.9vw, 12px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -608,9 +632,9 @@ body {
     right: 8px;
     background: rgba(24, 21, 18, 0.72);
     color: #ffffff;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
-    padding: 3px 9px;
+    padding: 3px 10px;
     border-radius: 999px;
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -629,7 +653,7 @@ body {
     justify-content: center;
     text-align: center;
     color: #8c7d70;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     padding: 12px;
 }
@@ -643,7 +667,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 18px;
+    padding: 20px;
 }
 
 .watermark-center {
@@ -655,7 +679,7 @@ body {
 }
 
 .watermark-center img {
-    height: 54px;
+    height: 58px;
     object-fit: contain;
 }
 
@@ -681,10 +705,9 @@ body {
     color: var(--text-dark);
 }
 
-/* ================= CHÂN TRANG ================= */
+/* ================= CHÂN TRANG (NẰM DƯỚI MÀN HÌNH ĐẦU, KÉO XUỐNG MỚI THẤY) ================= */
 .site-footer {
-    margin-top: 10px;
-    padding: 14px 12px 8px;
+    padding: 20px 12px 12px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -694,14 +717,14 @@ body {
 }
 
 .footer-logo {
-    height: 38px;
+    height: 40px;
     object-fit: contain;
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
     pointer-events: none;
 }
 
 .footer-project-name {
-    font-size: clamp(12px, 1vw, 14.5px);
+    font-size: clamp(12.5px, 1.05vw, 15px);
     font-weight: 800;
     letter-spacing: 0.6px;
     text-transform: uppercase;
@@ -709,9 +732,9 @@ body {
 }
 
 .footer-disclaimer {
-    font-size: clamp(10.5px, 0.88vw, 12.5px);
+    font-size: clamp(11px, 0.9vw, 13px);
     line-height: 1.6;
-    max-width: 900px;
+    max-width: 920px;
     color: rgba(255, 255, 255, 0.92);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
 }
