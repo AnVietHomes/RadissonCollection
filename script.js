@@ -115,8 +115,9 @@ function preloadWatermarkLogo() {
         .catch(() => {});
 }
 
-// Tự động căn lại nhãn mã căn trên SVG khi thay đổi kích thước cửa sổ
+// Tự động căn lại chấm định vị 3D và nhãn mã căn trên SVG khi thay đổi kích thước cửa sổ
 window.addEventListener('resize', () => {
+    position3DMarkerInCoverImage(document);
     if (activeHighlightedSvgEl) {
         positionSvgCallout(activeHighlightedSvgEl);
     }
