@@ -232,7 +232,6 @@ function formatPrice(rawVal) {
     return str;
 }
 
-// Chuẩn hóa từng phần Tầng hoặc Căn (ví dụ: '7' -> '07', '12A' -> '12A', '3A' -> '03A', '06A' -> '06A')
 function padUnitSegment(seg) {
     const clean = String(seg || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
     const m = clean.match(/^(\d+)([A-Z]*)$/);
@@ -241,7 +240,6 @@ function padUnitSegment(seg) {
     return `${numPart}${m[2]}`;
 }
 
-// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn khi người dùng bấm Enter hoặc rời ô nhập
 function normalizeUnitCode(input) {
     let clean = String(input || '').trim().toUpperCase().replace(/[-_,\s]+/g, '.');
     if (!clean) return '';
@@ -266,7 +264,6 @@ function normalizeUnitCode(input) {
 
     const compact = clean.replace(/^R/, '');
 
-    // Hỗ trợ chuỗi liền nhau có chữ cái ở tầng như 12A06 hoặc 12A6
     const specialFloorCompact = compact.match(/^(\d{2}[A-Z])(\d{1,2}[A-Z]?)$/);
     if (specialFloorCompact) {
         return `R.${specialFloorCompact[1]}.${padUnitSegment(specialFloorCompact[2])}`;
@@ -304,12 +301,6 @@ function normalizeUnitCode(input) {
     return clean.startsWith('R.') ? clean : (clean.startsWith('R') ? 'R.' + clean.slice(1) : 'R.' + clean);
 }
 
-// =========================================================================
-// TỰ ĐỘNG CHÈN DẤU CHẤM THÔNG MINH NGAY LÚC GÕ (XỬ LÝ TẦNG 12A, 12B, 19A, 20B...)
-// - Gõ 2 số tầng + chữ cái (VD: 12A) => tự chèn dấu '.' sau chữ cái: R.12A.
-// - Gõ 2 số tầng + 1 số khác (VD: 120) => tự chèn dấu '.' sau 2 số tầng: R.12.0
-// - Gõ tầng 1 chữ số > 2 (VD: 7, 8, 9) + số kế tiếp => tự thành R.07.
-// =========================================================================
 function formatSearchInputLive(rawValue) {
     let val = String(rawValue || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!val) return '';
@@ -324,44 +315,36 @@ function formatSearchInputLive(rawValue) {
     let rest = val.slice(2).replace(/\.+/g, '.');
     if (!rest) return 'R.';
 
-    // Nếu người dùng đã có dấu '.' phân tách tầng và căn
     if (rest.includes('.')) {
         const dotIdx = rest.indexOf('.');
         let floorPart = rest.slice(0, dotIdx).replace(/\./g, '');
         let unitPart = rest.slice(dotIdx + 1).replace(/\./g, '');
 
-        // Nếu tầng chỉ có 1 chữ số (VD: R.7.12) thì tự đệm 0 -> R.07.12
         if (/^\d$/.test(floorPart)) {
             floorPart = '0' + floorPart;
         }
         return `R.${floorPart}.${unitPart}`;
     }
 
-    // Chưa có dấu chấm thứ 2 -> phân tích chuỗi sau "R."
-    // Trường hợp 1: Bắt đầu bằng 2 chữ số (VD: 12, 07, 19, 20...)
     if (/^\d{2}/.test(rest)) {
         const firstTwo = rest.slice(0, 2);
         const afterTwo = rest.slice(2);
 
-        // Chưa gõ ký tự thứ 3 (mới gõ "12" hoặc "07") -> chờ xem ký tự tiếp theo là chữ cái hay số
         if (!afterTwo) {
             return `R.${firstTwo}`;
         }
 
-        // Ký tự thứ 3 là CHỮ CÁI (VD: 12A, 12B, 19A, 20B) -> tự chèn dấu '.' ngay sau chữ cái đó
         if (/^[A-Z]/.test(afterTwo)) {
             const letter = afterTwo[0];
             const unitDigits = afterTwo.slice(1);
             return `R.${firstTwo}${letter}.${unitDigits}`;
         }
 
-        // Ký tự thứ 3 là CHỮ SỐ (VD: 120, 071) -> tự chèn dấu '.' ngay sau 2 số đầu mã tầng
         if (/^\d/.test(afterTwo)) {
             return `R.${firstTwo}.${afterTwo}`;
         }
     }
 
-    // Trường hợp 2: Tầng 1 chữ số từ 3..9 (VD: 7, 8, 9) và gõ tiếp ký tự thứ 2 (VD: 70 -> R.07.0)
     if (/^[3-9]\d/.test(rest)) {
         return `R.0${rest[0]}.${rest.slice(1)}`;
     }
@@ -1033,8 +1016,57 @@ function updateMediaCards(row) {
 }
 
 // =========================================================================
-// 9. XUẤT ẢNH BÁO GIÁ (KÉO DÀI THẺ XUỐNG DƯỚI ĐỂ CHỨA WATERMARK, KHÔNG ĐÈ ẢNH/TEXT)
+// 9. XUẤT ẢNH BÁO GIÁ (GIỮ ĐÚNG TỶ LỆ GỐC CỦA MỌI HÌNH ẢNH KHI XUẤT)
 // =========================================================================
+function preserveImageAspectInClone(clonedDoc, containerId, fitMode) {
+    const box = clonedDoc.getElementById(containerId);
+    if (!box) return;
+    const img = box.querySelector('img');
+    if (!img || img.style.display === 'none') return;
+
+    const nw = img.naturalWidth;
+    const nh = img.naturalHeight;
+    if (!nw || !nh) return;
+
+    const style = clonedDoc.defaultView.getComputedStyle(box);
+    const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+    const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+    const boxW = box.clientWidth - padX;
+    const boxH = box.clientHeight - padY;
+    if (boxW <= 0 || boxH <= 0) return;
+
+    const imgRatio = nw / nh;
+    const boxRatio = boxW / boxH;
+
+    let renderW, renderH;
+    if (fitMode === 'cover') {
+        if (imgRatio > boxRatio) {
+            renderH = boxH;
+            renderW = boxH * imgRatio;
+        } else {
+            renderW = boxW;
+            renderH = boxW / imgRatio;
+        }
+    } else {
+        if (imgRatio > boxRatio) {
+            renderW = boxW;
+            renderH = boxW / imgRatio;
+        } else {
+            renderH = boxH;
+            renderW = boxH * imgRatio;
+        }
+    }
+
+    img.style.setProperty('width', `${renderW}px`, 'important');
+    img.style.setProperty('height', `${renderH}px`, 'important');
+    img.style.setProperty('max-width', 'none', 'important');
+    img.style.setProperty('max-height', 'none', 'important');
+    img.style.setProperty('position', 'absolute', 'important');
+    img.style.setProperty('left', `${(box.clientWidth - renderW) / 2}px`, 'important');
+    img.style.setProperty('top', `${(box.clientHeight - renderH) / 2}px`, 'important');
+    img.style.setProperty('object-fit', 'fill', 'important');
+}
+
 function exportImage() {
     const container = document.getElementById('exportContainer');
     const wmCenter = document.getElementById('watermarkOverlayCenter');
@@ -1055,7 +1087,13 @@ function exportImage() {
         html2canvas(container, {
             useCORS: true,
             scale: 2,
-            backgroundColor: null
+            backgroundColor: null,
+            onclone: clonedDoc => {
+                // Giữ nguyên tỷ lệ gốc 100% cho ảnh tòa nhà 3D, ảnh diễn họa nội thất và ảnh layout
+                preserveImageAspectInClone(clonedDoc, 'card3D', 'cover');
+                preserveImageAspectInClone(clonedDoc, 'cardInterior', 'cover');
+                preserveImageAspectInClone(clonedDoc, 'cardLayout', 'contain');
+            }
         })
             .then(canvas => {
                 const link = document.createElement('a');
