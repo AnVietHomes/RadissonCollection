@@ -672,8 +672,60 @@ function togglePaymentVisibility(planKey) {
 }
 
 // =========================================================================
-// 6. ĐỊNH VỊ ĐIỂM CHẤM TRÊN ẢNH PHỐI CẢNH 3D TÒA NHÀ
+// 6. ĐỊNH VỊ ĐIỂM CHẤM TRÊN ẢNH PHỐI CẢNH 3D TÒA NHÀ (KHỚP 100% TỶ LỆ GỐC)
 // =========================================================================
+function position3DMarkerInCoverImage(targetDoc = document) {
+    const img3D = targetDoc.getElementById('img3D');
+    const box = img3D ? img3D.parentElement : null;
+    const marker = targetDoc.getElementById('marker3DWrapper');
+    if (!img3D || !box || !marker) return;
+
+    const posX = parseFloat(marker.dataset.posX);
+    const finalY = parseFloat(marker.dataset.finalY);
+    if (isNaN(posX) || isNaN(finalY)) {
+        marker.style.display = 'none';
+        return;
+    }
+
+    const boxW = box.clientWidth;
+    const boxH = box.clientHeight;
+    const nw = img3D.naturalWidth;
+    const nh = img3D.naturalHeight;
+
+    if (!boxW || !boxH || !nw || !nh) {
+        marker.style.left = `${posX}%`;
+        marker.style.top = `${finalY}%`;
+        marker.classList.toggle('flip-left', posX > 72);
+        marker.style.display = 'flex';
+        return;
+    }
+
+    // Tính vùng hiển thị thực tế của ảnh gốc bên trong khung object-fit: cover
+    const imgRatio = nw / nh;
+    const boxRatio = boxW / boxH;
+
+    let renderedW, renderedH, offsetX, offsetY;
+    if (imgRatio > boxRatio) {
+        renderedH = boxH;
+        renderedW = boxH * imgRatio;
+        offsetX = (boxW - renderedW) / 2;
+        offsetY = 0;
+    } else {
+        renderedW = boxW;
+        renderedH = boxW / imgRatio;
+        offsetX = 0;
+        offsetY = (boxH - renderedH) / 2;
+    }
+
+    const pxX = offsetX + (posX / 100) * renderedW;
+    const pxY = offsetY + (finalY / 100) * renderedH;
+
+    marker.style.left = `${pxX}px`;
+    marker.style.top = `${pxY}px`;
+    marker.classList.toggle('flip-left', (pxX / boxW) > 0.72);
+    marker.style.display = 'flex';
+}
+
 function update3DBuildingMarker(row, unitCode) {
     const img3D = document.getElementById('img3D');
     const ph3D = document.getElementById('placeholder3D');
@@ -681,14 +733,6 @@ function update3DBuildingMarker(row, unitCode) {
 
     const custom3D = getCol(row, ['ảnh 3d', 'anh 3d']);
     const imgSrc = isValidValue(custom3D) ? resolveImagePath(custom3D, 'jpg') : CONFIG.DEFAULT_3D_IMAGE;
-
-    delete img3D.dataset.triedPng;
-    delete img3D.dataset.triedJpg;
-    img3D.style.display = 'block';
-    ph3D.style.display = 'none';
-    if (img3D.getAttribute('src') !== imgSrc) {
-        img3D.src = imgSrc;
-    }
 
     const rawX = getCol(row, ['tọa độ x', 'toạ độ x']);
     const rawY = getCol(row, ['tọa độ y', 'toạ độ y']);
@@ -699,14 +743,9 @@ function update3DBuildingMarker(row, unitCode) {
     const baseY = parseFloat(yStr.replace(',', '.'));
     const stepY = parseFloat(String(rawStep || '0').replace(',', '.')) || 0;
 
-    if (isNaN(posX) || isNaN(baseY)) {
-        marker.style.display = 'none';
-        return;
-    }
-
     let finalY = baseY;
 
-    if (stepY !== 0) {
+    if (!isNaN(posX) && !isNaN(baseY) && stepY !== 0) {
         let currentFloor = getCol(row, ['tầng']).toUpperCase().replace(/^0+/, '');
         if (!isValidValue(currentFloor)) {
             const parts = unitCode.split('.');
@@ -731,10 +770,29 @@ function update3DBuildingMarker(row, unitCode) {
         }
     }
 
-    marker.style.left = `${posX}%`;
-    marker.style.top = `${finalY}%`;
-    marker.classList.toggle('flip-left', posX > 72);
-    marker.style.display = 'flex';
+    if (isNaN(posX) || isNaN(finalY)) {
+        delete marker.dataset.posX;
+        delete marker.dataset.finalY;
+        marker.style.display = 'none';
+    } else {
+        marker.dataset.posX = String(posX);
+        marker.dataset.finalY = String(finalY);
+    }
+
+    delete img3D.dataset.triedPng;
+    delete img3D.dataset.triedJpg;
+    img3D.style.display = 'block';
+    ph3D.style.display = 'none';
+
+    img3D.onload = () => position3DMarkerInCoverImage(document);
+
+    if (img3D.getAttribute('src') !== imgSrc) {
+        img3D.src = imgSrc;
+    }
+
+    if (img3D.complete && img3D.naturalWidth > 0) {
+        position3DMarkerInCoverImage(document);
+    }
 }
 
 // =========================================================================
@@ -1016,13 +1074,12 @@ function updateMediaCards(row) {
 }
 
 // =========================================================================
-// 9. XUẤT ẢNH BÁO GIÁ (GIỮ ĐÚNG TỶ LỆ GỐC CỦA MỌI HÌNH ẢNH KHI XUẤT)
+// 9. XUẤT ẢNH BÁO GIÁ (GIỮ ĐÚNG TỶ LỆ GỐC & ĐỒNG BỘ CHẤM ĐỊNH VỊ)
 // =========================================================================
-function preserveImageAspectInClone(clonedDoc, containerId, fitMode) {
-    const box = clonedDoc.getElementById(containerId);
-    if (!box) return;
-    const img = box.querySelector('img');
-    if (!img || img.style.display === 'none') return;
+function preserveImageAspectInClone(clonedDoc, imgId, fitMode) {
+    const img = clonedDoc.getElementById(imgId);
+    const box = img ? img.parentElement : null;
+    if (!img || !box || img.style.display === 'none') return;
 
     const nw = img.naturalWidth;
     const nh = img.naturalHeight;
@@ -1089,10 +1146,10 @@ function exportImage() {
             scale: 2,
             backgroundColor: null,
             onclone: clonedDoc => {
-                // Giữ nguyên tỷ lệ gốc 100% cho ảnh tòa nhà 3D, ảnh diễn họa nội thất và ảnh layout
-                preserveImageAspectInClone(clonedDoc, 'card3D', 'cover');
-                preserveImageAspectInClone(clonedDoc, 'cardInterior', 'cover');
-                preserveImageAspectInClone(clonedDoc, 'cardLayout', 'contain');
+                preserveImageAspectInClone(clonedDoc, 'img3D', 'cover');
+                preserveImageAspectInClone(clonedDoc, 'imgInterior', 'cover');
+                preserveImageAspectInClone(clonedDoc, 'imgLayout', 'contain');
+                position3DMarkerInCoverImage(clonedDoc);
             }
         })
             .then(canvas => {
