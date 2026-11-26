@@ -21,7 +21,7 @@ let hiddenPaymentsState = {};
 let activeHighlightedSvgEl = null;
 
 // =========================================================================
-// 1. TẢI VÀ PHÂN TÍCH DỮ LIỆU CSV
+// 1. TẢI VÀ PHÂN TÍCH DỮ LIỆU CSV (KHÔNG TỰ ĐỘNG HIỆN CĂN NÀO KHI MỚI VÀO WEB)
 // =========================================================================
 window.addEventListener('DOMContentLoaded', () => {
     setupSearchInputEvents();
@@ -36,28 +36,10 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(csvText => {
             apartmentData = parseCSVStandard(csvText);
 
-            // Đổ danh sách gợi ý mã căn vào datalist
-            const datalist = document.getElementById('unitCodeList');
-            if (datalist) {
-                datalist.innerHTML = apartmentData
-                    .map(r => getCol(r, ['mã căn hộ', 'mã căn']))
-                    .filter(Boolean)
-                    .map(code => `<option value="${code}">`)
-                    .join('');
-            }
-
             const toast = document.getElementById('statusToast');
             if (toast) {
                 toast.innerText = `Sẵn sàng (${apartmentData.length} căn)`;
-                setTimeout(() => { toast.style.display = 'none'; }, 2400);
-            }
-
-            if (apartmentData.length > 0) {
-                const defaultRow = apartmentData.find(r =>
-                    normalizeUnitCode(getCol(r, ['mã căn hộ', 'mã căn'])) === 'R.17.08'
-                ) || apartmentData[0];
-
-                renderApartment(defaultRow);
+                setTimeout(() => { toast.style.display = 'none'; }, 2200);
             }
         })
         .catch(() => {
@@ -130,7 +112,7 @@ function parseCSVStandard(text) {
 }
 
 // =========================================================================
-// 2. HÀM TIỆN ÍCH DỮ LIỆU & DỊCH HƯỚNG THÔNG MINH
+// 2. HÀM TIỆN ÍCH DỮ LIỆU, DỊCH HƯỚNG & CHUẨN HÓA MÃ CĂN R.TẦNG.CĂN
 // =========================================================================
 function getCol(row, possibleKeys) {
     if (!row) return '';
@@ -186,30 +168,124 @@ function formatPrice(rawVal) {
     return str;
 }
 
+// Chuẩn hóa từng phần Tầng hoặc Căn (ví dụ: '7' -> '07', '12A' -> '12A', '3A' -> '03A', '06A' -> '06A')
+function padUnitSegment(seg) {
+    const clean = String(seg || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const m = clean.match(/^(\d+)([A-Z]*)$/);
+    if (!m) return clean;
+    const numPart = m[1].length === 1 ? '0' + m[1] : m[1];
+    return `${numPart}${m[2]}`;
+}
+
+// Chuẩn hóa hoàn chỉnh mã căn về định dạng R.Tầng.Căn (hỗ trợ cả tầng 2 số, 3 số + chữ như 12A, 12B, 102A và căn 03A, 12A...)
 function normalizeUnitCode(input) {
-    let clean = String(input || '').trim().toUpperCase().replace(/[-_\s]+/g, '.');
+    let clean = String(input || '').trim().toUpperCase().replace(/[-_,\s]+/g, '.');
     if (!clean) return '';
 
-    if (!clean.includes('.')) {
-        const compact = clean.replace(/^R/, '');
-        const match = compact.match(/^(\d{1,2}[A-Z]?)(\d{2}[A-Z]?)$/);
-        if (match) {
-            const floorPart = match[1].length === 1 ? '0' + match[1] : match[1];
-            return `R.${floorPart}.${match[2]}`;
+    // Nếu người dùng đã nhập có dấu chấm phân tách (ví dụ: r.7.3a, 12a.1, r.12b.03a, 102a.5)
+    if (clean.includes('.')) {
+        let parts = clean.split('.').filter(Boolean);
+        if (parts[0] === 'R') {
+            parts.shift();
+        } else if (parts[0].startsWith('R') && parts[0].length > 1) {
+            parts[0] = parts[0].slice(1);
         }
-        return clean.startsWith('R') ? clean : 'R.' + clean;
+
+        if (parts.length >= 2) {
+            const floor = padUnitSegment(parts[0]);
+            const unit = padUnitSegment(parts[1]);
+            return `R.${floor}.${unit}`;
+        }
+        if (parts.length === 1) {
+            return `R.${padUnitSegment(parts[0])}`;
+        }
     }
 
-    const parts = clean.split('.').filter(Boolean);
-    if (parts.length === 2) {
-        const floorPart = parts[0].length === 1 ? '0' + parts[0] : parts[0];
-        return `R.${floorPart}.${parts[1]}`;
+    // Nếu người dùng nhập liền không dấu chấm (ví dụ: 71, 0701, r0703a, 12a01, 12b3a, 1212a, 102a05)
+    const compact = clean.replace(/^R/, '');
+
+    // Tách tất cả các cụm [Số + Chữ cái tùy chọn]
+    const tokens = compact.match(/\d+[A-Z]?/g);
+    if (tokens && tokens.length >= 2) {
+        // Trường hợp có chữ ở giữa giúp tách tự nhiên (VD: 12A01 -> ['12A', '01'], 12B3A -> ['12B', '3A'], 102A05 -> ['102A', '05'])
+        const floor = padUnitSegment(tokens[0]);
+        const unit = padUnitSegment(tokens[1]);
+        return `R.${floor}.${unit}`;
     }
-    if (parts.length === 3) {
-        const floorPart = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-        return `${parts[0]}.${floorPart}.${parts[2]}`;
+
+    // Trường hợp toàn số hoặc chỉ có chữ ở cuối (VD: 71, 701, 0701, 1213, 703A, 0703A, 1212A, 10212)
+    const singleMatch = compact.match(/^(\d+)([A-Z]?)$/);
+    if (singleMatch) {
+        const digits = singleMatch[1];
+        const suffixLetter = singleMatch[2];
+
+        if (digits.length === 2) {
+            // VD: 71 -> R.07.01
+            return `R.0${digits[0]}.0${digits[1]}${suffixLetter}`;
+        }
+        if (digits.length === 3) {
+            // VD: 701 -> R.07.01 | 73A -> R.07.03A
+            if (digits.startsWith('0')) {
+                return `R.${digits.slice(0, 2)}.0${digits.slice(2)}${suffixLetter}`;
+            }
+            return `R.0${digits[0]}.${digits.slice(1)}${suffixLetter}`;
+        }
+        if (digits.length === 4) {
+            // VD: 0701 -> R.07.01 | 1213 -> R.12.13 | 1212A -> R.12.12A
+            return `R.${digits.slice(0, 2)}.${digits.slice(2)}${suffixLetter}`;
+        }
+        if (digits.length >= 5) {
+            // VD tầng 3 số: 10205 -> R.102.05
+            return `R.${digits.slice(0, 3)}.${padUnitSegment(digits.slice(3))}${suffixLetter}`;
+        }
     }
-    return clean;
+
+    return clean.startsWith('R.') ? clean : (clean.startsWith('R') ? 'R.' + clean.slice(1) : 'R.' + clean);
+}
+
+// Tự động định dạng R.Tầng.Căn ngay trong lúc gõ trên thanh tìm kiếm
+function formatSearchInputLive(rawValue) {
+    let val = String(rawValue || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!val) return '';
+
+    // Luôn bắt đầu bằng R.
+    if (val === 'R') return 'R.';
+    if (!val.startsWith('R')) {
+        val = 'R.' + val;
+    } else if (val.length >= 2 && val[1] !== '.') {
+        val = 'R.' + val.slice(1);
+    }
+
+    // Xử lý phần sau "R."
+    let rest = val.slice(2).replace(/\.+/g, '.');
+    if (!rest) return 'R.';
+
+    // Nếu người dùng đã gõ dấu chấm thứ 2 (VD: R.12A.01 hoặc R.07.03A)
+    if (rest.includes('.')) {
+        const dotIdx = rest.indexOf('.');
+        const floorPart = rest.slice(0, dotIdx).replace(/\./g, '');
+        const unitPart = rest.slice(dotIdx + 1).replace(/\./g, '');
+        return `R.${floorPart}.${unitPart}`;
+    }
+
+    // Tự động chèn dấu chấm thứ 2 khi kết thúc cụm Tầng:
+    // 1. Tầng có chữ đi kèm như 12A, 12B, 19A, 20B, 102A và người dùng gõ tiếp ký tự căn
+    const alphaFloorMatch = rest.match(/^(\d{1,3}[A-Z])(.+)$/);
+    if (alphaFloorMatch) {
+        return `R.${alphaFloorMatch[1]}.${alphaFloorMatch[2]}`;
+    }
+
+    // 2. Tầng bắt đầu bằng 0 (07, 08, 09) và người dùng gõ sang ký tự thứ 3 (VD: R.070 -> R.07.0)
+    if (/^0\d{2}/.test(rest)) {
+        return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
+    }
+
+    // 3. Tầng 2 chữ số (10..27) và người dùng gõ đủ 4 chữ số (VD: R.1213 -> R.12.13, R.1212A -> R.12.12A)
+    if (/^[1-9]\d{3,}/.test(rest)) {
+        return `R.${rest.slice(0, 2)}.${rest.slice(2)}`;
+    }
+
+    return `R.${rest}`;
 }
 
 // =========================================================================
@@ -219,6 +295,15 @@ function setupSearchInputEvents() {
     const inputEl = document.getElementById('searchInput');
     if (!inputEl) return;
 
+    inputEl.addEventListener('input', e => {
+        // Không ép định dạng khi người dùng đang bấm phím Xóa (Backspace/Delete)
+        if (e.inputType && e.inputType.startsWith('delete')) return;
+        const formatted = formatSearchInputLive(inputEl.value);
+        if (formatted !== inputEl.value) {
+            inputEl.value = formatted;
+        }
+    });
+
     inputEl.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -226,18 +311,13 @@ function setupSearchInputEvents() {
         }
     });
 
-    // Tự động hiển thị ngay nếu người dùng chọn mã căn từ danh sách gợi ý
-    inputEl.addEventListener('change', () => {
+    inputEl.addEventListener('blur', () => {
         const val = inputEl.value.trim();
-        if (!val || apartmentData.length === 0) return;
-        const norm = normalizeUnitCode(val);
-        const found = apartmentData.find(row =>
-            normalizeUnitCode(getCol(row, ['mã căn hộ', 'mã căn'])) === norm
-        );
-        if (found) {
-            inputEl.value = getCol(found, ['mã căn hộ', 'mã căn']);
-            renderApartment(found);
+        if (!val || val === 'R.') {
+            inputEl.value = '';
+            return;
         }
+        inputEl.value = normalizeUnitCode(val);
     });
 }
 
@@ -249,9 +329,10 @@ function searchApartment() {
 
     const inputEl = document.getElementById('searchInput');
     const rawQuery = inputEl.value.trim();
-    if (!rawQuery) return;
+    if (!rawQuery || rawQuery === 'R.') return;
 
     const normalizedQuery = normalizeUnitCode(rawQuery);
+    inputEl.value = normalizedQuery;
 
     const matchedRow = apartmentData.find(row => {
         const rowCode = normalizeUnitCode(getCol(row, ['mã căn hộ', 'mã căn']));
@@ -268,6 +349,13 @@ function searchApartment() {
 }
 
 function renderApartment(row) {
+    // Mở giao diện chi tiết và nút Tải xuống ảnh khi đã tìm kiếm căn hộ
+    const mainCard = document.getElementById('exportContainer');
+    if (mainCard) mainCard.classList.remove('is-empty-state');
+
+    const btnExport = document.getElementById('btnExport');
+    if (btnExport) btnExport.style.display = 'inline-flex';
+
     const unitCode = getCol(row, ['mã căn hộ', 'mã căn']) || '---';
     const productType = getCol(row, ['loại hình sản phẩm', 'loại hình']);
     const productLine = getCol(row, ['dòng sản phẩm']);
@@ -329,7 +417,7 @@ function renderApartment(row) {
 }
 
 // =========================================================================
-// 4. BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN (TỰ ĐỘNG ẨN KHI KHÔNG CÓ DỮ LIỆU)
+// 4. BẢNG GIÁ THEO PHƯƠNG ÁN THANH TOÁN (NÚT + VÀ - CỐ ĐỊNH CÙNG VỊ TRÍ)
 // =========================================================================
 function renderPaymentPlans(row) {
     const paymentListEl = document.getElementById('paymentList');
@@ -458,22 +546,38 @@ function update3DBuildingMarker(row, unitCode) {
 }
 
 // =========================================================================
-// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (KẾT CẤU CHUẨN LAYER 1 -> 01..15 + bg)
+// 6. NẠP & ĐÁNH DẤU MẶT BẰNG TẦNG SVG (GIẢI MÃ CHUẨN ID ILLUSTRATOR _x0030_1 -> 01)
 // =========================================================================
-function normalizeAxisToken(rawAxis) {
-    const clean = String(rawAxis || '').toUpperCase().replace(/^_+/, '').replace(/[^A-Z0-9]/g, '');
-    const match = clean.match(/^0*(\d+)([A-Z]?)$/);
+function decodeIllustratorId(rawStr) {
+    if (!rawStr) return '';
+    // Giải mã các ký tự số/ký hiệu do Illustrator xuất ra XML ID (VD: _x0030_1 -> 01, _x0031_2A -> 12A)
+    let decoded = String(rawStr).replace(/_x([0-9A-Fa-f]{4})_/g, (_, hex) =>
+        String.fromCharCode(parseInt(hex, 16))
+    );
+    // Loại bỏ hậu tố trùng lặp nếu có (_1_, _2_...) và dấu gạch dưới đầu
+    decoded = decoded.replace(/_\d+_$/, '').replace(/^_+/, '');
+    return decoded.trim().toUpperCase();
+}
+
+// Chuẩn hóa về dạng có số 0 đứng trước 2 chữ số (VD: '1' -> '01', '3A' -> '03A', '06A' -> '06A', '12A' -> '12A')
+function normalizePaddedAxis(rawAxis) {
+    const decoded = decodeIllustratorId(rawAxis).replace(/[^A-Z0-9]/g, '');
+    const match = decoded.match(/^0*(\d+)([A-Z]?)$/);
     if (match) {
-        return `${parseInt(match[1], 10)}${match[2]}`;
+        const num = parseInt(match[1], 10);
+        const padded = num < 10 ? `0${num}` : `${num}`;
+        return `${padded}${match[2]}`;
     }
-    return clean;
+    return decoded;
 }
 
 function clearSvgUnitStyle(el) {
+    el.style.setProperty('opacity', '0', 'important');
     el.style.setProperty('fill', 'transparent', 'important');
     el.style.setProperty('stroke', 'transparent', 'important');
     el.style.removeProperty('mix-blend-mode');
-    el.querySelectorAll('polygon, path, rect, polyline').forEach(child => {
+    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(child => {
+        child.style.setProperty('opacity', '0', 'important');
         child.style.setProperty('fill', 'transparent', 'important');
         child.style.setProperty('stroke', 'transparent', 'important');
         child.style.removeProperty('mix-blend-mode');
@@ -481,15 +585,26 @@ function clearSvgUnitStyle(el) {
 }
 
 function highlightSvgUnitStyle(el) {
-    const highlightFill = 'rgba(235, 77, 36, 0.85)';
+    const highlightFill = '#eb4d24';
+    const highlightStroke = '#c92a14';
 
+    el.style.setProperty('opacity', '1', 'important');
+    el.style.setProperty('display', 'inline', 'important');
+    el.style.setProperty('visibility', 'visible', 'important');
     el.style.setProperty('fill', highlightFill, 'important');
-    el.style.setProperty('stroke', 'none', 'important');
+    el.style.setProperty('fill-opacity', '0.78', 'important');
+    el.style.setProperty('stroke', highlightStroke, 'important');
+    el.style.setProperty('stroke-width', '1.5px', 'important');
     el.style.setProperty('mix-blend-mode', 'multiply', 'important');
 
-    el.querySelectorAll('polygon, path, rect, polyline').forEach(child => {
+    el.querySelectorAll('polygon, path, rect, polyline, circle').forEach(child => {
+        child.style.setProperty('opacity', '1', 'important');
+        child.style.setProperty('display', 'inline', 'important');
+        child.style.setProperty('visibility', 'visible', 'important');
         child.style.setProperty('fill', highlightFill, 'important');
-        child.style.setProperty('stroke', 'none', 'important');
+        child.style.setProperty('fill-opacity', '0.78', 'important');
+        child.style.setProperty('stroke', highlightStroke, 'important');
+        child.style.setProperty('stroke-width', '1.5px', 'important');
         child.style.setProperty('mix-blend-mode', 'multiply', 'important');
     });
 }
@@ -508,7 +623,7 @@ function updateFloorPlanSVG(row, unitCode) {
 
     const svgFileName = svgFileRaw.toLowerCase().endsWith('.svg') ? svgFileRaw : `${svgFileRaw}.svg`;
 
-    fetch(`svg/${svgFileName}`)
+    fetch(`svg/${svgFileName}?v=${Date.now()}`)
         .then(res => {
             if (!res.ok) throw new Error(`Không tìm thấy svg/${svgFileName}`);
             return res.text();
@@ -524,62 +639,64 @@ function updateFloorPlanSVG(row, unitCode) {
             svgEl.style.height = '100%';
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            let sttRaw = getCol(row, ['stt căn', 'stt']);
-            if (!isValidValue(sttRaw)) {
-                const parts = unitCode.split('.');
-                if (parts.length >= 3) sttRaw = parts[2];
-            }
-            const targetAxisNorm = normalizeAxisToken(sttRaw);
-            const targetFullNorm = unitCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            // Lấy STT căn từ CSV (VD: 1 -> 01, 3A -> 03A) và dự phòng mã đuôi từ Mã căn hộ (VD: R.12B.03A -> 03A)
+            const sttRaw = getCol(row, ['stt căn', 'stt']);
+            const codeParts = unitCode.split('.');
+            const codeSuffixRaw = codeParts.length >= 3 ? codeParts[2] : '';
 
-            let matchedElement = null;
-            const allElements = svgEl.querySelectorAll('g, polygon, path, rect');
+            const targetFromStt = isValidValue(sttRaw) ? normalizePaddedAxis(sttRaw) : '';
+            const targetFromCode = isValidValue(codeSuffixRaw) ? normalizePaddedAxis(codeSuffixRaw) : '';
+
+            // Thu thập toàn bộ phần tử vector vùng căn (bỏ qua Layer_1 và nhóm nền bg)
+            const unitCandidates = [];
+            const allElements = svgEl.querySelectorAll('g, polygon, path, rect, polyline');
 
             allElements.forEach(el => {
-                const rawId = el.id || '';
-                if (!rawId) return;
+                if (el.closest('#bg') || el.closest('#BG') || el.closest('defs')) return;
 
-                // Bỏ qua Layer gốc (Layer_1) và nhóm nền (bg)
-                const decodedId = rawId.toUpperCase().replace(/_X002D_/g, '-').replace(/_X002E_/g, '.');
-                if (decodedId === 'LAYER_1' || decodedId === 'LAYER1' || decodedId === 'BG') return;
+                const rawIdentifier = el.getAttribute('id') || el.getAttribute('data-name') || el.getAttribute('inkscape:label') || '';
+                if (!rawIdentifier) return;
 
-                // Khớp chuẩn kết cấu file SVG: 01, 02, 03, 03A, 06A, 12A... (Illustrator xuất id="_01", id="_03A"...)
-                const isDirectAxisId = /^_?\d{1,2}[A-Z]?$/.test(decodedId);
-                const isCanPrefixedId = /^CAN[_\-.]?\d{1,2}[A-Z]?$/.test(decodedId);
-                const isFullUnitId = /^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?\d{1,2}[A-Z]?$/.test(decodedId);
+                const decoded = decodeIllustratorId(rawIdentifier);
+                if (!decoded || decoded === 'LAYER_1' || decoded === 'LAYER1' || decoded === 'BG') return;
 
-                if (isDirectAxisId || isCanPrefixedId || isFullUnitId) {
-                    clearSvgUnitStyle(el);
+                // Khớp tên poly: 01, 02, 03A, 06A, 12A, 12B, 15... (hoặc CAN_01, R.07.01)
+                const isDirectAxis = /^\d{1,2}[A-Z]?$/.test(decoded);
+                const isCanPrefixed = /^CAN[_\-.]?\d{1,2}[A-Z]?$/.test(decoded);
+                const isFullUnit = /^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?\d{1,2}[A-Z]?$/.test(decoded);
 
-                    let isMatch = false;
-                    if (isDirectAxisId) {
-                        isMatch = normalizeAxisToken(decodedId) === targetAxisNorm;
-                    } else if (isCanPrefixedId) {
-                        const axisPart = decodedId.replace(/^CAN[_\-.]?/, '');
-                        isMatch = normalizeAxisToken(axisPart) === targetAxisNorm;
-                    } else if (isFullUnitId) {
-                        const canonicalFull = decodedId.replace(/[^A-Z0-9]/g, '');
-                        if (canonicalFull === targetFullNorm) {
-                            isMatch = true;
-                        } else {
-                            const unitMatch = decodedId.match(/^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?(\d{1,2}[A-Z]?)$/);
-                            if (unitMatch && normalizeAxisToken(unitMatch[1]) === targetAxisNorm) {
-                                isMatch = true;
-                            }
-                        }
+                if (isDirectAxis || isCanPrefixed || isFullUnit) {
+                    let axisToken = '';
+                    if (isDirectAxis) {
+                        axisToken = normalizePaddedAxis(decoded);
+                    } else if (isCanPrefixed) {
+                        axisToken = normalizePaddedAxis(decoded.replace(/^CAN[_\-.]?/, ''));
+                    } else if (isFullUnit) {
+                        const m = decoded.match(/^R[.\-_]?\d{1,2}[A-Z]?[.\-_]?(\d{1,2}[A-Z]?)$/);
+                        axisToken = m ? normalizePaddedAxis(m[1]) : '';
                     }
 
-                    if (isMatch) {
-                        highlightSvgUnitStyle(el);
-                        matchedElement = el;
+                    if (axisToken) {
+                        clearSvgUnitStyle(el);
+                        unitCandidates.push({ el, axisToken });
                     }
                 }
             });
 
-            if (matchedElement) {
-                activeHighlightedSvgEl = matchedElement;
-                requestAnimationFrame(() => positionSvgCallout(matchedElement));
-                setTimeout(() => positionSvgCallout(matchedElement), 120);
+            // Ưu tiên khớp theo STT căn (đã bù số 0: 1 -> 01, 3A -> 03A), nếu không thấy thì khớp theo đuôi Mã căn hộ
+            let matched = null;
+            if (targetFromStt) {
+                matched = unitCandidates.find(item => item.axisToken === targetFromStt);
+            }
+            if (!matched && targetFromCode) {
+                matched = unitCandidates.find(item => item.axisToken === targetFromCode);
+            }
+
+            if (matched && matched.el) {
+                highlightSvgUnitStyle(matched.el);
+                activeHighlightedSvgEl = matched.el;
+                requestAnimationFrame(() => positionSvgCallout(matched.el));
+                setTimeout(() => positionSvgCallout(matched.el), 120);
             }
         })
         .catch(() => {
@@ -604,7 +721,7 @@ function positionSvgCallout(targetEl) {
         const topY = targetRect.top - boxRect.top;
 
         badge.style.left = `${centerX}px`;
-        badge.style.top = `${Math.max(20, topY)}px`;
+        badge.style.top = `${Math.max(22, topY)}px`;
         badge.style.display = 'block';
     }
 }
