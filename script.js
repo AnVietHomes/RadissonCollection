@@ -18,8 +18,8 @@ const CONFIG = {
 const PROFIT_UNIT_TYPES = {
     'Junior Suite': 47,
     'Deluxe (Studio)': 206,
-    'Suite 1B': 3,
-    'Suite 2B': 6,
+    'Suite 1BR': 3,
+    'Suite 2BR': 6,
     'Suite 3BR': 1,
     'Duplex Suite': 2,
     'Duplex Junior Suite': 5
