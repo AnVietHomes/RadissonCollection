@@ -995,43 +995,75 @@ body {
     font-weight: 600;
 }
 
-/* LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT (LIQUID GLASS) */
+/* LIGHTBOX PHÓNG TO & KÉO THẢ LAYOUT (APPLE LIQUID GLASS) */
 #imageLightbox.modal-overlay {
-    background: rgba(20, 14, 10, 0.48);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(18, 13, 10, 0.36);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .lightbox-dialog {
     width: min(1240px, 94vw);
     height: min(820px, 90vh);
+    position: relative;
+    border-radius: 26px;
     background: linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.24) 0%,
-        rgba(255, 255, 255, 0.09) 48%,
-        rgba(255, 255, 255, 0.16) 100%
+        135deg,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0.12) 45%,
+        rgba(255, 248, 240, 0.22) 100%
     );
-    backdrop-filter: blur(30px) saturate(185%);
-    -webkit-backdrop-filter: blur(30px) saturate(185%);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(28px) saturate(190%) brightness(1.06);
+    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.06);
+    border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow:
-        0 30px 80px rgba(15, 10, 6, 0.48),
-        inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6),
-        inset 0 -1px 1px rgba(255, 255, 255, 0.15);
+        0 32px 80px rgba(15, 10, 6, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.18),
+        inset 0 2px 3px rgba(255, 255, 255, 0.78),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.22),
+        inset 2px 0 4px rgba(255, 225, 195, 0.35),
+        inset -2px 0 4px rgba(205, 235, 255, 0.3);
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
+/* Bật khúc xạ bẻ cong ánh sáng thực tế ở mép kính trên Chrome / Edge */
+html.supports-liquid-refraction .lightbox-dialog {
+    backdrop-filter: url(#liquidGlassFilter) brightness(1.06);
+}
+
+/* Lớp vệt sáng phản chiếu chéo trên bề mặt kính */
+.lightbox-dialog::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+        125deg,
+        rgba(255, 255, 255, 0.38) 0%,
+        rgba(255, 255, 255, 0.06) 28%,
+        transparent 55%,
+        rgba(255, 255, 255, 0.14) 100%
+    );
+    z-index: 3;
+}
+
 .lightbox-topbar {
+    position: relative;
+    z-index: 4;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 13px 22px;
-    background: rgba(255, 255, 255, 0.12);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.24);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    padding: 14px 22px;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.24) 0%,
+        rgba(255, 255, 255, 0.08) 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
     color: #ffffff;
 }
 
@@ -1039,7 +1071,7 @@ body {
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.2px;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.32);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.38);
 }
 
 .lightbox-controls {
@@ -1049,27 +1081,45 @@ body {
 }
 
 .lb-btn {
-    background: rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0.14) 100%
+    );
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.34);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.48);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.14),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.65),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
     height: 34px;
     min-width: 34px;
-    padding: 0 11px;
+    padding: 0 13px;
     font-family: 'Manrope', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
     cursor: pointer;
-    transition: background 0.18s ease, transform 0.15s ease, border-color 0.18s ease;
+    transition: transform 0.16s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .lb-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.65);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.48) 0%,
+        rgba(255, 255, 255, 0.24) 100%
+    );
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.85);
     transform: translateY(-1px);
+}
+
+.lb-btn:active {
+    transform: scale(0.96);
 }
 
 .lb-btn-reset {
@@ -1077,14 +1127,22 @@ body {
 }
 
 .lb-btn-close {
-    background: rgba(231, 76, 60, 0.72);
-    border: 1px solid rgba(255, 190, 185, 0.45);
-    font-size: 20px;
+    background: linear-gradient(
+        180deg,
+        rgba(242, 92, 76, 0.82) 0%,
+        rgba(214, 58, 44, 0.72) 100%
+    );
+    border: 1px solid rgba(255, 210, 205, 0.6);
+    font-size: 19px;
+    padding: 0;
 }
 
 .lb-btn-close:hover {
-    background: rgba(231, 76, 60, 0.92);
-    border-color: rgba(255, 255, 255, 0.7);
+    background: linear-gradient(
+        180deg,
+        rgba(248, 102, 86, 0.95) 0%,
+        rgba(222, 62, 48, 0.9) 100%
+    );
 }
 
 .lb-zoom-label {
@@ -1093,17 +1151,18 @@ body {
     min-width: 50px;
     text-align: center;
     color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.38);
 }
 
 .lightbox-viewport {
     flex: 1;
     position: relative;
+    z-index: 2;
     overflow: hidden;
     background: radial-gradient(
-        circle at 50% 45%,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.02) 100%
+        circle at 50% 48%,
+        rgba(255, 255, 255, 0.34) 0%,
+        rgba(255, 255, 255, 0.14) 100%
     );
     display: flex;
     align-items: center;
@@ -1120,22 +1179,29 @@ body {
     max-width: 92%;
     max-height: 92%;
     object-fit: contain;
-    border-radius: 14px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(15, 10, 6, 0.28);
     transform-origin: center center;
     transition: transform 0.08s ease-out;
     user-select: none;
 }
 
 .lightbox-hint {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.92);
+    position: relative;
+    z-index: 4;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.07) 100%
+    );
+    color: #ffffff;
     font-size: 12px;
     font-weight: 600;
     text-align: center;
     padding: 9px;
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.38);
 }
 
 /* POPUP IFRAME 360 THỰC TẾ */
