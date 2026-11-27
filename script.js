@@ -18,11 +18,10 @@ const CONFIG = {
 const PROFIT_UNIT_TYPES = {
     'Junior Suite': 47,
     'Deluxe (Studio)': 206,
-    'Suite 1BR': 3,
-    'Suite 2BR': 6,
+    'Suite 1B': 3,
+    'Suite 2B': 6,
     'Suite 3BR': 1,
-    'Duplex Suite': 2,
-    'Duplex Junior Suite': 5
+    'Duplex': 7
 };
 
 let apartmentData = [];
@@ -1603,30 +1602,24 @@ function matchProfitUnitType(rawLine, rawProductType) {
     const pType = String(rawProductType || '').trim().toLowerCase();
     if (!line && !pType) return null;
 
+    // Loại trừ Penthouse khỏi bảng tính chia sẻ doanh thu
     if (line.includes('penthouse') || pType.includes('penthouse')) {
         return '__EXCLUDED__';
     }
 
-    const sortedKeys = Object.keys(PROFIT_UNIT_TYPES).sort((a, b) => b.length - a.length);
-    for (const key of sortedKeys) {
-        const kLower = key.toLowerCase();
-        if (line === kLower || line.includes(kLower)) {
-            return key;
-        }
+    // Ưu tiên bắt toàn bộ nhóm Duplex (Duplex, Duplex Suite, Duplex Junior Suite...) trước Junior Suite / Suite
+    if (line.includes('duplex') || pType.includes('duplex')) {
+        return 'Duplex';
     }
 
     if (line.includes('deluxe') || line.includes('studio') || pType.includes('studio')) {
         return 'Deluxe (Studio)';
     }
-    if (line.includes('duplex') && line.includes('junior')) {
-        return 'Duplex Junior Suite';
-    }
-    if (line.includes('duplex')) {
-        return 'Duplex Suite';
-    }
+
     if (line.includes('junior')) {
         return 'Junior Suite';
     }
+
     if (line.includes('suite')) {
         if (line.includes('3') || pType.includes('3pn')) return 'Suite 3BR';
         if (line.includes('2') || pType.includes('2pn')) return 'Suite 2B';
