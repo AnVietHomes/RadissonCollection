@@ -1378,3 +1378,581 @@ html.supports-liquid-refraction .lightbox-dialog {
         overflow: hidden;
     }
 }
+
+/* ================= NÚT & POPUP BẢNG TÍNH LỢI NHUẬN (ĐỒNG BỘ XEM QUỸ CĂN & LIQUID GLASS) ================= */
+.btn-profit-calc {
+    background: linear-gradient(135deg, #f9a363 0%, #f8be62 100%);
+    color: var(--text-dark);
+}
+
+#modalProfitCalc.modal-overlay {
+    background: rgba(18, 13, 10, 0.44);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.profit-dialog {
+    width: min(1220px, 95vw);
+    max-height: 90vh;
+    position: relative;
+    border-radius: 26px;
+    background: linear-gradient(
+        155deg,
+        rgba(255, 253, 249, 0.94) 0%,
+        rgba(253, 244, 232, 0.92) 55%,
+        rgba(250, 224, 192, 0.92) 100%
+    );
+    backdrop-filter: blur(28px) saturate(185%);
+    -webkit-backdrop-filter: blur(28px) saturate(185%);
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+        0 30px 80px rgba(20, 12, 6, 0.48),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.92);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--text-dark);
+}
+
+/* Tầng 1: Header bar */
+.profit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.72);
+    border-bottom: 1px solid rgba(24, 21, 18, 0.09);
+    flex-shrink: 0;
+}
+
+.profit-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profit-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.profit-title {
+    font-size: clamp(15px, 1.3vw, 19px);
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: 0.2px;
+}
+
+.profit-unit-badge {
+    background: linear-gradient(135deg, var(--pill-orange) 0%, var(--pill-gold) 100%);
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 800;
+    padding: 3px 14px;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(249, 163, 99, 0.35);
+}
+
+.profit-subtitle {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.profit-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-profit-sync {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(24, 21, 18, 0.14);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text-dark);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: background 0.16s ease, transform 0.15s ease, border-color 0.16s ease;
+    white-space: nowrap;
+}
+
+.btn-profit-sync:hover {
+    background: linear-gradient(135deg, var(--pill-orange) 0%, var(--pill-gold) 100%);
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+
+.profit-close-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(24, 21, 18, 0.14);
+    background: rgba(24, 21, 18, 0.07);
+    color: var(--text-dark);
+    font-size: 23px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+
+.profit-close-btn:hover {
+    background: #e74c3c;
+    border-color: transparent;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* Tầng 2: Thanh bộ lọc & Nút bấm thả xuống dạng Pill */
+.profit-toolbar-panel {
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.48);
+    border-bottom: 1px solid rgba(24, 21, 18, 0.09);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.profit-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pf-control-card {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(24, 21, 18, 0.1);
+    border-radius: 16px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+}
+
+.pf-control-readonly {
+    background: rgba(248, 241, 231, 0.85);
+}
+
+.pf-control-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.pf-control-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.pf-tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+.pf-tag-edit {
+    background: rgba(249, 163, 99, 0.28);
+    color: #963806;
+}
+
+.pf-tag-auto {
+    background: rgba(25, 135, 84, 0.16);
+    color: #146c43;
+}
+
+.pf-pill-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(249, 163, 99, 0.72);
+    background: #ffffff;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #0b2d6b;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.pf-pill-input.pf-text-left {
+    text-align: left;
+}
+
+.pf-pill-input:focus {
+    border-color: #d96b27;
+    box-shadow: 0 0 0 3px rgba(249, 163, 99, 0.25);
+}
+
+.pf-readonly-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pf-pill-readonly {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(24, 21, 18, 0.15);
+    color: var(--text-dark);
+    padding-right: 44px;
+    cursor: default;
+}
+
+.pf-unit-suffix {
+    position: absolute;
+    right: 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.pf-percent-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pf-percent-wrap .pf-pill-input {
+    padding-right: 30px;
+}
+
+.pf-percent-suffix {
+    position: absolute;
+    right: 14px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.pf-control-hint {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+/* Custom Pill Dropdown Button (giống nút lọc thả xuống Xem Quỹ Căn) */
+.pf-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.pf-dropdown-btn {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(249, 163, 99, 0.85);
+    background: linear-gradient(180deg, #ffffff 0%, #fff8ef 100%);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.pf-dropdown-btn:hover,
+.pf-dropdown.is-open .pf-dropdown-btn {
+    border-color: #d96b27;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(249, 163, 99, 0.25);
+}
+
+.pf-dropdown-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pf-dropdown-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.pf-dropdown-count-pill {
+    background: rgba(249, 163, 99, 0.26);
+    color: #8f3605;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.pf-dropdown-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+}
+
+.pf-dropdown.is-open .pf-dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+.pf-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: rgba(255, 253, 249, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(249, 163, 99, 0.65);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 18px 40px rgba(24, 15, 8, 0.22);
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.pf-dropdown.is-open .pf-dropdown-menu {
+    display: flex;
+}
+
+.pf-dropdown-item {
+    width: 100%;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    padding: 8px 11px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.14s ease;
+}
+
+.pf-dropdown-item:hover {
+    background: rgba(249, 163, 99, 0.22);
+}
+
+.pf-dropdown-item.is-selected {
+    background: linear-gradient(135deg, var(--pill-orange) 0%, var(--pill-gold) 100%);
+    font-weight: 800;
+}
+
+.pf-dropdown-item-count {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: rgba(24, 21, 18, 0.07);
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.pf-dropdown-item.is-selected .pf-dropdown-item-count {
+    background: rgba(255, 255, 255, 0.65);
+    color: var(--text-dark);
+}
+
+/* Dải thẻ tóm tắt công thức trung gian */
+.profit-kpi-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.profit-kpi-item {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(24, 21, 18, 0.09);
+    border-radius: 14px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.profit-kpi-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profit-kpi-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.profit-kpi-formula {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.profit-kpi-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+
+.pf-kpi-accent {
+    color: #0b2d6b;
+}
+
+/* Tầng 3: Vùng bảng dữ liệu cuộn dọc (giống bảng Xem Quỹ Căn) */
+.profit-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.profit-table-block {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(24, 21, 18, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.profit-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    background: #f6ead9;
+    border-bottom: 1px solid rgba(24, 21, 18, 0.09);
+}
+
+.profit-block-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.25px;
+    color: var(--text-dark);
+}
+
+.profit-block-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+
+.profit-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.profit-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.profit-data-table th {
+    background: rgba(250, 242, 231, 0.85);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(24, 21, 18, 0.1);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.profit-data-table td {
+    padding: 13px 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.profit-data-table th:first-child,
+.profit-data-table td:first-child {
+    text-align: left;
+}
+
+.pf-cell-bold {
+    font-weight: 800 !important;
+    color: #0b2d6b !important;
+}
+
+/* Khối kết quả lợi nhuận thực tế */
+.profit-result-block {
+    border: 1.5px solid rgba(248, 190, 98, 0.9);
+    background: linear-gradient(135deg, #fffdf5 0%, #fff5d6 100%);
+}
+
+.profit-result-header {
+    background: linear-gradient(90deg, rgba(249, 163, 99, 0.35) 0%, rgba(248, 190, 98, 0.42) 100%);
+}
+
+.profit-result-tag {
+    color: #873600;
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.pf-cell-highlight {
+    color: #c81e1e !important;
+    font-size: 15.5px;
+    font-weight: 800 !important;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.pf-cell-yield {
+    font-size: 16.5px;
+}
+
+@media screen and (max-width: 960px) {
+    .profit-controls-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .profit-kpi-strip {
+        grid-template-columns: 1fr;
+    }
+}
