@@ -30,6 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupLightboxEvents();
     initSourceProtection();
     preloadWatermarkLogo();
+    initLiquidGlassRefraction();
 
     fetch(`${CONFIG.DATA_FILE}?v=${Date.now()}`)
         .then(res => {
@@ -1390,4 +1391,81 @@ function initSourceProtection() {
             }
         }
     }, 900);
+}
+
+// =========================================================================
+// 13. TẠO BẢN ĐỒ KHÚC XẠ THẤU KÍNH LIQUID GLASS (BEVEL EDGE REFRACTION)
+// =========================================================================
+function initLiquidGlassRefraction() {
+    const mapImg = document.getElementById('liquidGlassMapImg');
+    if (!mapImg) return;
+
+    const size = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const imgData = ctx.createImageData(size, size);
+    const data = imgData.data;
+
+    const radius = 36;      // Bo góc khớp với border-radius popup
+    const bevelWidth = 34;  // Độ dày viền kính vát cạnh bẻ cong ánh sáng
+    const half = size / 2;
+    const boxHalf = half - radius;
+
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const px = x + 0.5 - half;
+            const py = y + 0.5 - half;
+
+            const qx = Math.abs(px) - boxHalf;
+            const qy = Math.abs(py) - boxHalf;
+
+            const outX = Math.max(qx, 0);
+            const outY = Math.max(qy, 0);
+            const outsideDist = Math.hypot(outX, outY);
+            const insideDist = Math.min(Math.max(qx, qy), 0);
+            const sdf = outsideDist + insideDist - radius; // < 0 là bên trong khung
+
+            let r = 128;
+            let g = 128;
+
+            // Chỉ bẻ cong ánh sáng ở dải viền vát cạnh, giữ vùng giữa phẳng để ảnh nét tuyệt đối
+            if (sdf <= 0 && sdf > -bevelWidth) {
+                const t = 1 + sdf / bevelWidth; // 0 (mép trong) -> 1 (mép ngoài)
+                const bend = Math.sin(t * Math.PI * 0.5);
+
+                let nx = 0;
+                let ny = 0;
+                if (outsideDist > 0.001) {
+                    nx = (outX / outsideDist) * Math.sign(px);
+                    ny = (outY / outsideDist) * Math.sign(py);
+                } else if (qx > qy) {
+                    nx = Math.sign(px);
+                } else {
+                    ny = Math.sign(py);
+                }
+
+                r = Math.round(128 + nx * bend * 118);
+                g = Math.round(128 + ny * bend * 118);
+            }
+
+            const idx = (y * size + x) * 4;
+            data[idx] = Math.min(255, Math.max(0, r));
+            data[idx + 1] = Math.min(255, Math.max(0, g));
+            data[idx + 2] = 128;
+            data[idx + 3] = 255;
+        }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    const dataUrl = canvas.toDataURL('image/png');
+    mapImg.setAttribute('href', dataUrl);
+    mapImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl);
+
+    // Kích hoạt khúc xạ SVG trên trình duyệt hỗ trợ (Chrome / Edge)
+    const isChromium = Boolean(window.chrome) && !/Firefox/i.test(navigator.userAgent);
+    if (isChromium) {
+        document.documentElement.classList.add('supports-liquid-refraction');
+    }
 }
