@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20261127">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -298,110 +298,142 @@
     </defs>
 </svg>
 
-    <!-- POPUP: BẢNG TÍNH CHIA SẺ DOANH THU & LỢI NHUẬN -->
+<!-- POPUP: BẢNG TÍNH CHIA SẺ DOANH THU & LỢI NHUẬN -->
 <div id="modalProfitCalc" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalProfitCalc')">
     <div class="profit-dialog">
+        <!-- TẦNG 1: HEADER ĐỒNG BỘ BẢNG XEM QUỸ CĂN -->
         <div class="profit-header">
-            <div class="profit-title-group">
-                <h2 class="profit-title">BẢNG TÍNH CHIA SẺ DOANH THU DỰ ÁN RADISSON COLLECTION HẠ LONG BAY</h2>
-                <p class="profit-subtitle">Nhập các thông số tại ô <strong>Tự điền</strong> để hệ thống tự động tính toán lợi nhuận &amp; tỷ suất đầu tư theo thời gian thực</p>
+            <div class="profit-header-left">
+                <div class="profit-title-row">
+                    <h2 class="profit-title">BẢNG TÍNH CHIA SẺ DOANH THU &amp; LỢI NHUẬN</h2>
+                    <span id="pfHeaderUnitBadge" class="profit-unit-badge">R.15.10</span>
+                </div>
+                <p class="profit-subtitle">Radisson Collection Hạ Long Bay • Các ô gắn nhãn <strong>Tự điền</strong> cho phép nhập trực tiếp để tính toán theo thời gian thực</p>
             </div>
             <div class="profit-header-actions">
-                <button type="button" class="btn-profit-sync" onclick="syncCurrentUnitToProfitCalc()" title="Lấy mã căn, giá và loại hình của căn đang xem">
-                    Lấy dữ liệu căn đang xem
+                <button type="button" class="btn-profit-sync" onclick="syncCurrentUnitToProfitCalc()" title="Đồng bộ mã căn, giá và loại hình đang xem">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <span>Lấy dữ liệu căn đang xem</span>
                 </button>
-                <button type="button" class="modal-close-circle inv-close-btn" onclick="closeProfitCalcModal()" title="Đóng">&times;</button>
+                <button type="button" class="profit-close-btn" onclick="closeProfitCalcModal()" title="Đóng">&times;</button>
             </div>
         </div>
 
-        <div class="profit-body">
-            <!-- KHỐI 1: THÔNG SỐ ĐẦU VÀO & CƠ CẤU VỐN -->
-            <div class="profit-section-card">
-                <div class="profit-section-heading">1. Thông số đầu vào &amp; Tỷ lệ góp vốn</div>
-                <div class="profit-input-table-wrap">
-                    <table class="profit-sheet-table profit-form-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 34%;">Chỉ tiêu</th>
-                                <th style="width: 30%;">Giá trị</th>
-                                <th style="width: 14%; text-align: center;">Trạng thái</th>
-                                <th style="width: 22%;">Ghi chú vận hành</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="pf-label">Mã căn</td>
-                                <td>
-                                    <input type="text" id="pfUnitCode" class="pf-input pf-input-text" value="R.15.10" placeholder="VD: R.15.10" oninput="recalculateProfit()">
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-edit">Tự điền</span></td>
-                                <td class="pf-note">Mã căn hộ cần tính</td>
-                            </tr>
-                            <tr>
-                                <td class="pf-label">Giá (VNĐ)</td>
-                                <td>
-                                    <input type="text" id="pfUnitPrice" class="pf-input pf-input-num" value="5.000.000.000" inputmode="numeric" oninput="handleProfitCurrencyInput(this)">
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-edit">Tự điền</span></td>
-                                <td class="pf-note">Điền càng nhỏ thì càng tăng tỷ suất đầu tư</td>
-                            </tr>
-                            <tr>
-                                <td class="pf-label">Loại hình căn</td>
-                                <td>
-                                    <select id="pfUnitType" class="pf-input pf-select" onchange="onProfitUnitTypeChange()"></select>
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-edit">Tự điền</span></td>
-                                <td class="pf-note">Chọn loại hình sản phẩm</td>
-                            </tr>
-                            <tr>
-                                <td class="pf-label">Giá đêm nghỉ (VNĐ)</td>
-                                <td>
-                                    <input type="text" id="pfNightRate" class="pf-input pf-input-num" value="5.000.000" inputmode="numeric" oninput="handleProfitCurrencyInput(this)">
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-edit">Tự điền</span></td>
-                                <td class="pf-note">Điền càng cao thì càng tăng tỷ suất đầu tư</td>
-                            </tr>
-                            <tr>
-                                <td class="pf-label">Tỷ lệ lấp đầy (%)</td>
-                                <td>
-                                    <div class="pf-percent-wrap">
-                                        <input type="number" id="pfOccupancy" class="pf-input pf-input-num" value="80" min="0" max="100" step="1" oninput="recalculateProfit()">
-                                        <span class="pf-percent-suffix">%</span>
-                                    </div>
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-edit">Tự điền</span></td>
-                                <td class="pf-note">Điền càng cao thì càng tăng tỷ suất đầu tư</td>
-                            </tr>
-                            <tr>
-                                <td class="pf-label">Tổng số lượng loại hình căn</td>
-                                <td>
-                                    <input type="number" id="pfTotalUnits" class="pf-input pf-input-num pf-input-readonly" value="67" readonly>
-                                </td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-auto">Tự động</span></td>
-                                <td class="pf-note">Tự nhảy theo loại hình căn đã chọn</td>
-                            </tr>
-                            <tr class="pf-calc-row">
-                                <td class="pf-label">Tổng giá trị loại hình căn</td>
-                                <td class="pf-calc-val" id="pfOutTotalTypeValue">335.000.000.000</td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-formula">Công thức</span></td>
-                                <td class="pf-note">= Giá &times; Tổng số lượng loại hình căn</td>
-                            </tr>
-                            <tr class="pf-calc-row">
-                                <td class="pf-label">Tỷ lệ % vốn góp của KH / loại hình căn</td>
-                                <td class="pf-calc-val pf-highlight-blue" id="pfOutEquityRatio">1,49%</td>
-                                <td class="pf-badge-cell"><span class="pf-tag pf-tag-formula">Công thức</span></td>
-                                <td class="pf-note">= Giá / Tổng giá trị loại hình căn</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- TẦNG 2: THANH BỘ LỌC & NÚT BẤM THẢ XUỐNG DẠNG PILL -->
+        <div class="profit-toolbar-panel">
+            <div class="profit-controls-grid">
+                <!-- Ô 1: Mã căn -->
+                <div class="pf-control-card">
+                    <div class="pf-control-top">
+                        <label for="pfUnitCode" class="pf-control-label">Mã căn</label>
+                        <span class="pf-tag pf-tag-edit">Tự điền</span>
+                    </div>
+                    <input type="text" id="pfUnitCode" class="pf-pill-input pf-text-left" value="R.15.10" placeholder="VD: R.15.10" oninput="recalculateProfit()">
+                    <span class="pf-control-hint">Mã căn hộ cần tính lợi nhuận</span>
+                </div>
+
+                <!-- Ô 2: Nút bấm thả xuống Loại hình căn (Custom Pill Dropdown) -->
+                <div class="pf-control-card">
+                    <div class="pf-control-top">
+                        <span class="pf-control-label">Loại hình căn</span>
+                        <span class="pf-tag pf-tag-edit">Tự điền</span>
+                    </div>
+                    <div class="pf-dropdown" id="pfTypeDropdown">
+                        <input type="hidden" id="pfUnitType" value="Deluxe (Studio)">
+                        <button type="button" id="pfTypeDropdownBtn" class="pf-dropdown-btn" onclick="toggleProfitTypeDropdown(event)" aria-haspopup="listbox" aria-expanded="false">
+                            <span id="pfTypeDropdownLabel" class="pf-dropdown-label">Deluxe (Studio)</span>
+                            <span class="pf-dropdown-right">
+                                <span id="pfTypeDropdownCount" class="pf-dropdown-count-pill">206 căn</span>
+                                <svg class="pf-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                        <div id="pfTypeDropdownMenu" class="pf-dropdown-menu" role="listbox"></div>
+                    </div>
+                    <span class="pf-control-hint">Bấm chọn để tự cập nhật tổng số căn</span>
+                </div>
+
+                <!-- Ô 3: Tổng số lượng loại hình căn (Tự động nhảy) -->
+                <div class="pf-control-card pf-control-readonly">
+                    <div class="pf-control-top">
+                        <label for="pfTotalUnits" class="pf-control-label">Tổng số lượng loại hình căn</label>
+                        <span class="pf-tag pf-tag-auto">Tự động</span>
+                    </div>
+                    <div class="pf-readonly-box">
+                        <input type="number" id="pfTotalUnits" class="pf-pill-input pf-pill-readonly" value="206" readonly>
+                        <span class="pf-unit-suffix">căn</span>
+                    </div>
+                    <span class="pf-control-hint">Tự động nhảy theo loại hình đã chọn</span>
+                </div>
+
+                <!-- Ô 4: Giá -->
+                <div class="pf-control-card">
+                    <div class="pf-control-top">
+                        <label for="pfUnitPrice" class="pf-control-label">Giá (VNĐ)</label>
+                        <span class="pf-tag pf-tag-edit">Tự điền</span>
+                    </div>
+                    <input type="text" id="pfUnitPrice" class="pf-pill-input" value="5.000.000.000" inputmode="numeric" oninput="handleProfitCurrencyInput(this)">
+                    <span class="pf-control-hint">Điền càng nhỏ thì càng tăng tỷ suất đầu tư</span>
+                </div>
+
+                <!-- Ô 5: Giá đêm nghỉ -->
+                <div class="pf-control-card">
+                    <div class="pf-control-top">
+                        <label for="pfNightRate" class="pf-control-label">Giá đêm nghỉ (VNĐ)</label>
+                        <span class="pf-tag pf-tag-edit">Tự điền</span>
+                    </div>
+                    <input type="text" id="pfNightRate" class="pf-pill-input" value="5.000.000" inputmode="numeric" oninput="handleProfitCurrencyInput(this)">
+                    <span class="pf-control-hint">Điền càng cao thì càng tăng tỷ suất đầu tư</span>
+                </div>
+
+                <!-- Ô 6: Tỷ lệ lấp đầy -->
+                <div class="pf-control-card">
+                    <div class="pf-control-top">
+                        <label for="pfOccupancy" class="pf-control-label">Tỷ lệ lấp đầy (%)</label>
+                        <span class="pf-tag pf-tag-edit">Tự điền</span>
+                    </div>
+                    <div class="pf-percent-wrap">
+                        <input type="number" id="pfOccupancy" class="pf-pill-input" value="80" min="0" max="100" step="1" oninput="recalculateProfit()">
+                        <span class="pf-percent-suffix">%</span>
+                    </div>
+                    <span class="pf-control-hint">Điền càng cao thì càng tăng tỷ suất đầu tư</span>
                 </div>
             </div>
 
-            <!-- KHỐI 2: BẢNG TÍNH TỔNG DOANH THU -->
-            <div class="profit-section-card">
-                <div class="profit-section-heading">2. Bảng tính tổng doanh thu toàn loại hình</div>
-                <div class="profit-table-scroll">
-                    <table class="profit-sheet-table profit-grid-table">
+            <!-- DẢI THẺ TÓM TẮT CÔNG THỨC VỐN GÓP -->
+            <div class="profit-kpi-strip">
+                <div class="profit-kpi-item">
+                    <div class="profit-kpi-meta">
+                        <span class="profit-kpi-title">Tổng giá trị loại hình căn</span>
+                        <span class="profit-kpi-formula">= Giá &times; Tổng số lượng loại hình căn</span>
+                    </div>
+                    <div class="profit-kpi-value" id="pfOutTotalTypeValue">1.030.000.000.000</div>
+                </div>
+                <div class="profit-kpi-item">
+                    <div class="profit-kpi-meta">
+                        <span class="profit-kpi-title">Tỷ lệ % vốn góp của KH / loại hình căn</span>
+                        <span class="profit-kpi-formula">= Giá / Tổng giá trị loại hình căn</span>
+                    </div>
+                    <div class="profit-kpi-value pf-kpi-accent" id="pfOutEquityRatio">0,49%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TẦNG 3: KHU VỰC BẢNG DỮ LIỆU CUỘN DỌC (GIỐNG BẢNG XEM QUỸ CĂN) -->
+        <div class="profit-body">
+            <!-- BẢNG 1: TỔNG DOANH THU TOÀN LOẠI HÌNH -->
+            <div class="profit-table-block">
+                <div class="profit-block-header">
+                    <span class="profit-block-title">Bảng tính tổng doanh thu toàn loại hình</span>
+                    <span class="profit-block-badge">Chia sẻ 35% lợi nhuận cho khách hàng</span>
+                </div>
+                <div class="profit-table-wrap">
+                    <table class="profit-data-table">
                         <thead>
                             <tr>
                                 <th>Loại căn</th>
@@ -415,26 +447,27 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td id="pfRevType">Deluxe</td>
+                                <td id="pfRevType">Deluxe (Studio)</td>
                                 <td id="pfRevNightRate">5.000.000</td>
                                 <td id="pfRevOccupancy">80%</td>
                                 <td id="pfRevDays">292</td>
-                                <td id="pfRevUnits">67</td>
-                                <td id="pfRevGross100">97.820.000.000</td>
-                                <td class="pf-strong-dark" id="pfRevShare35">34.237.000.000</td>
+                                <td id="pfRevUnits">206</td>
+                                <td id="pfRevGross100">300.760.000.000</td>
+                                <td class="pf-cell-bold" id="pfRevShare35">105.266.000.000</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- KHỐI 3: LỢI NHUẬN THỰC TẾ CĂN HỘ -->
-            <div class="profit-section-card profit-result-card">
-                <div class="profit-section-heading profit-result-heading" id="pfResultTitle">
-                    3. Lợi nhuận thực tế căn R.15.10
+            <!-- BẢNG 2: LỢI NHUẬN THỰC TẾ CĂN HỘ -->
+            <div class="profit-table-block profit-result-block">
+                <div class="profit-block-header profit-result-header">
+                    <span class="profit-block-title" id="pfResultTitle">Lợi nhuận thực tế căn R.15.10</span>
+                    <span class="profit-block-badge profit-result-tag">Kết quả sau dự phòng 4% &amp; VAT 10%</span>
                 </div>
-                <div class="profit-table-scroll">
-                    <table class="profit-sheet-table profit-grid-table profit-result-table">
+                <div class="profit-table-wrap">
+                    <table class="profit-data-table profit-result-table">
                         <thead>
                             <tr>
                                 <th>Tổng LN KH nhận 35%</th>
@@ -448,13 +481,13 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td id="pfNetBaseShare">34.237.000.000</td>
-                                <td id="pfNetEquityRatio">1,49%</td>
+                                <td id="pfNetBaseShare">105.266.000.000</td>
+                                <td id="pfNetEquityRatio">0,49%</td>
                                 <td id="pfNetProfitGross">511.000.000</td>
                                 <td id="pfNetReserve4">20.440.000</td>
                                 <td id="pfNetVat10">51.100.000</td>
-                                <td class="pf-final-red" id="pfNetProfitFinal">439.460.000</td>
-                                <td class="pf-final-red pf-yield-badge" id="pfNetYield">8,79%</td>
+                                <td class="pf-cell-highlight" id="pfNetProfitFinal">439.460.000</td>
+                                <td class="pf-cell-highlight pf-cell-yield" id="pfNetYield">8,79%</td>
                             </tr>
                         </tbody>
                     </table>
