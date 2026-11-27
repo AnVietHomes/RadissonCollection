@@ -1526,6 +1526,8 @@ html.supports-liquid-refraction .lightbox-dialog {
     flex-direction: column;
     gap: 14px;
     flex-shrink: 0;
+    position: relative; 
+    z-index: 20;
 }
 
 .profit-controls-grid {
@@ -1845,6 +1847,8 @@ html.supports-liquid-refraction .lightbox-dialog {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    position: relative; /* Thêm dòng này */
+    z-index: 1;         /* Thêm dòng này */
 }
 
 .profit-table-block {
@@ -1853,6 +1857,7 @@ html.supports-liquid-refraction .lightbox-dialog {
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
 }
 
 .profit-block-header {
@@ -1948,11 +1953,54 @@ html.supports-liquid-refraction .lightbox-dialog {
     font-size: 16.5px;
 }
 
+/* Responsive cho màn hình chia đôi cửa sổ / bề ngang hẹp hoặc màn hình laptop thấp */
+@media screen and (max-width: 960px), screen and (max-height: 780px) {
+    .profit-dialog {
+        max-height: 92vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .profit-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(255, 253, 249, 0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+
+    .profit-body {
+        flex: none;
+        overflow: visible;
+    }
+}
+
 @media screen and (max-width: 960px) {
     .profit-controls-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .profit-kpi-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .profit-header {
+        padding: 14px 18px;
+        flex-wrap: wrap;
+    }
+
+    .profit-toolbar-panel {
+        padding: 14px 18px;
+    }
+
+    .profit-body {
+        padding: 14px 18px 20px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .profit-controls-grid {
         grid-template-columns: 1fr;
     }
 }
