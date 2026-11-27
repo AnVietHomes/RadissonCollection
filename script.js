@@ -1495,21 +1495,80 @@ function initLiquidGlassRefraction() {
 let isProfitCalcInitialized = false;
 
 function initProfitCalculator() {
-    const typeSelect = document.getElementById('pfUnitType');
-    if (!typeSelect) return;
+    const menuEl = document.getElementById('pfTypeDropdownMenu');
+    const hiddenInput = document.getElementById('pfUnitType');
+    if (!menuEl || !hiddenInput) return;
 
     const entries = Object.entries(PROFIT_UNIT_TYPES);
-    typeSelect.innerHTML = entries
-        .map(([typeName]) => `<option value="${typeName}">${typeName}</option>`)
+    const defaultType = entries.find(([k]) => k === 'Deluxe (Studio)') ? 'Deluxe (Studio)' : (entries[0]?.[0] || '');
+
+    menuEl.innerHTML = entries
+        .map(([typeName, count]) => `
+            <button type="button" class="pf-dropdown-item" data-type="${typeName}" onclick="selectProfitUnitType('${typeName.replace(/'/g, "\\'")}')">
+                <span>${typeName}</span>
+                <span class="pf-dropdown-item-count">${count} căn</span>
+            </button>
+        `)
         .join('');
 
-    if (entries.length > 0) {
-        typeSelect.value = entries[0][0];
-        document.getElementById('pfTotalUnits').value = entries[0][1];
+    if (defaultType) {
+        selectProfitUnitType(defaultType, true);
     }
+
+    // Đóng menu thả xuống khi bấm ra ngoài
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('pfTypeDropdown');
+        if (dropdown && !dropdown.contains(e.target)) {
+            closeProfitTypeDropdown();
+        }
+    });
 
     isProfitCalcInitialized = true;
     recalculateProfit();
+}
+
+function toggleProfitTypeDropdown(event) {
+    if (event) event.stopPropagation();
+    const dropdown = document.getElementById('pfTypeDropdown');
+    const btn = document.getElementById('pfTypeDropdownBtn');
+    if (!dropdown) return;
+
+    const willOpen = !dropdown.classList.contains('is-open');
+    dropdown.classList.toggle('is-open', willOpen);
+    if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+}
+
+function closeProfitTypeDropdown() {
+    const dropdown = document.getElementById('pfTypeDropdown');
+    const btn = document.getElementById('pfTypeDropdownBtn');
+    if (dropdown) dropdown.classList.remove('is-open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function selectProfitUnitType(typeName, skipRecalc = false) {
+    const hiddenInput = document.getElementById('pfUnitType');
+    const labelEl = document.getElementById('pfTypeDropdownLabel');
+    const countPillEl = document.getElementById('pfTypeDropdownCount');
+    const totalUnitsInput = document.getElementById('pfTotalUnits');
+    const menuEl = document.getElementById('pfTypeDropdownMenu');
+
+    const count = PROFIT_UNIT_TYPES[typeName] ?? 0;
+
+    if (hiddenInput) hiddenInput.value = typeName;
+    if (labelEl) labelEl.innerText = typeName;
+    if (countPillEl) countPillEl.innerText = `${count} căn`;
+    if (totalUnitsInput) totalUnitsInput.value = count;
+
+    if (menuEl) {
+        menuEl.querySelectorAll('.pf-dropdown-item').forEach(btn => {
+            btn.classList.toggle('is-selected', btn.dataset.type === typeName);
+        });
+    }
+
+    closeProfitTypeDropdown();
+    if (!skipRecalc) {
+        recalculateProfit();
+    }
 }
 
 function openProfitCalcModal() {
@@ -1531,6 +1590,7 @@ function openProfitCalcModal() {
 }
 
 function closeProfitCalcModal() {
+    closeProfitTypeDropdown();
     const modal = document.getElementById('modalProfitCalc');
     if (modal) {
         modal.classList.remove('is-open');
@@ -1610,24 +1670,11 @@ function syncCurrentUnitToProfitCalc(silent = false) {
         }
 
         if (matchedTypeKey && PROFIT_UNIT_TYPES[matchedTypeKey] !== undefined) {
-            document.getElementById('pfUnitType').value = matchedTypeKey;
-            document.getElementById('pfTotalUnits').value = PROFIT_UNIT_TYPES[matchedTypeKey];
+            selectProfitUnitType(matchedTypeKey, true);
         }
     } else {
         document.getElementById('pfUnitCode').value = currentCode;
     }
-
-    recalculateProfit();
-}
-
-function onProfitUnitTypeChange() {
-    const typeSelect = document.getElementById('pfUnitType');
-    const totalUnitsInput = document.getElementById('pfTotalUnits');
-    if (!typeSelect || !totalUnitsInput) return;
-
-    const selectedType = typeSelect.value;
-    const count = PROFIT_UNIT_TYPES[selectedType] ?? 0;
-    totalUnitsInput.value = count;
 
     recalculateProfit();
 }
@@ -1659,7 +1706,7 @@ function handleProfitCurrencyInput(inputEl) {
 function recalculateProfit() {
     const unitCode = (document.getElementById('pfUnitCode')?.value || '').trim() || '---';
     const unitPrice = parseProfitNumber(document.getElementById('pfUnitPrice')?.value);
-    const unitType = document.getElementById('pfUnitType')?.value || '---';
+    const unitType = document.getElementById('pfUnitType')?.value || 'Deluxe (Studio)';
     const nightRate = parseProfitNumber(document.getElementById('pfNightRate')?.value);
     const occupancyPct = Math.max(0, parseFloat(document.getElementById('pfOccupancy')?.value) || 0);
     const occupancyRate = occupancyPct / 100;
@@ -1678,6 +1725,9 @@ function recalculateProfit() {
     const unitNetProfit = unitGrossProfit - reserveFund4 - vat10;
     const investmentYield = unitPrice > 0 ? (unitNetProfit / unitPrice) : 0;
 
+    const headerBadge = document.getElementById('pfHeaderUnitBadge');
+    if (headerBadge) headerBadge.innerText = unitCode;
+
     document.getElementById('pfOutTotalTypeValue').innerText = formatProfitVND(totalTypeValue);
     document.getElementById('pfOutEquityRatio').innerText = formatProfitPercent(equityRatio);
 
@@ -1689,7 +1739,7 @@ function recalculateProfit() {
     document.getElementById('pfRevGross100').innerText = formatProfitVND(grossRevenue100);
     document.getElementById('pfRevShare35').innerText = formatProfitVND(customerShare35);
 
-    document.getElementById('pfResultTitle').innerText = `3. Lợi nhuận thực tế căn ${unitCode}`;
+    document.getElementById('pfResultTitle').innerText = `Lợi nhuận thực tế căn ${unitCode}`;
     document.getElementById('pfNetBaseShare').innerText = formatProfitVND(customerShare35);
     document.getElementById('pfNetEquityRatio').innerText = formatProfitPercent(equityRatio);
     document.getElementById('pfNetProfitGross').innerText = formatProfitVND(unitGrossProfit);
