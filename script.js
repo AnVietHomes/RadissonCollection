@@ -15,6 +15,15 @@ const CONFIG = {
     URL_360_DIEN_HOA: 'https://radisson-virtualtour-viewer.vercel.app/',
     IS_360_DIEN_HOA_PUBLIC: false // Đổi thành true khi muốn mở link 360 diễn họa
 };
+const PROFIT_UNIT_TYPES = {
+    'Junior Suite': 47,
+    'Deluxe (Studio)': 206,
+    'Suite 1B': 3,
+    'Suite 2B': 6,
+    'Suite 3BR': 1,
+    'Duplex Suite': 2,
+    'Duplex Junior Suite': 5
+};
 
 let apartmentData = [];
 let openForSaleUnits = [];
@@ -1334,7 +1343,11 @@ function initSourceProtection() {
 
     ['selectstart', 'copy', 'cut', 'dragstart'].forEach(evtName => {
         document.addEventListener(evtName, e => {
-            if (e.target && (e.target.id === 'searchInput' || e.target.id === 'invSearchInput')) return;
+            if (e.target && (
+                e.target.id === 'searchInput' ||
+                e.target.id === 'invSearchInput' ||
+                e.target.closest('#modalProfitCalc')
+            )) return;
             e.preventDefault();
             return false;
         }, true);
@@ -1345,7 +1358,8 @@ function initSourceProtection() {
             closeImageLightbox();
             close360RealModal();
             close360RenderModal();
-            closeInventoryModal();
+            closeProfitCalcModal();
+            if (typeof closeInventoryModal === 'function') closeInventoryModal();
             return;
         }
 
@@ -1369,7 +1383,12 @@ function initSourceProtection() {
         }
 
         if (isCtrlOrMeta && ['C', 'X', 'A'].includes(key)) {
-            if (document.activeElement && (document.activeElement.id === 'searchInput' || document.activeElement.id === 'invSearchInput')) return;
+            const activeEl = document.activeElement;
+            if (activeEl && (
+                activeEl.id === 'searchInput' ||
+                activeEl.id === 'invSearchInput' ||
+                activeEl.closest('#modalProfitCalc')
+            )) return;
             e.preventDefault();
             return false;
         }
@@ -1468,4 +1487,214 @@ function initLiquidGlassRefraction() {
     if (isChromium) {
         document.documentElement.classList.add('supports-liquid-refraction');
     }
+}
+
+// =========================================================================
+// HỆ BẢNG TÍNH CHIA SẺ DOANH THU & LỢI NHUẬN REALTIME
+// =========================================================================
+let isProfitCalcInitialized = false;
+
+function initProfitCalculator() {
+    const typeSelect = document.getElementById('pfUnitType');
+    if (!typeSelect) return;
+
+    const entries = Object.entries(PROFIT_UNIT_TYPES);
+    typeSelect.innerHTML = entries
+        .map(([typeName]) => `<option value="${typeName}">${typeName}</option>`)
+        .join('');
+
+    if (entries.length > 0) {
+        typeSelect.value = entries[0][0];
+        document.getElementById('pfTotalUnits').value = entries[0][1];
+    }
+
+    isProfitCalcInitialized = true;
+    recalculateProfit();
+}
+
+function openProfitCalcModal() {
+    if (!isProfitCalcInitialized) {
+        initProfitCalculator();
+    }
+    const currentCode = (document.getElementById('lblMaCanTop')?.innerText || '').trim();
+    if (currentCode && currentCode !== '---') {
+        syncCurrentUnitToProfitCalc(true);
+    } else {
+        recalculateProfit();
+    }
+
+    const modal = document.getElementById('modalProfitCalc');
+    if (modal) {
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeProfitCalcModal() {
+    const modal = document.getElementById('modalProfitCalc');
+    if (modal) {
+        modal.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+}
+
+function matchProfitUnitType(rawLine, rawProductType) {
+    const line = String(rawLine || '').trim().toLowerCase();
+    const pType = String(rawProductType || '').trim().toLowerCase();
+    if (!line && !pType) return null;
+
+    if (line.includes('penthouse') || pType.includes('penthouse')) {
+        return '__EXCLUDED__';
+    }
+
+    const sortedKeys = Object.keys(PROFIT_UNIT_TYPES).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+        const kLower = key.toLowerCase();
+        if (line === kLower || line.includes(kLower)) {
+            return key;
+        }
+    }
+
+    if (line.includes('deluxe') || line.includes('studio') || pType.includes('studio')) {
+        return 'Deluxe (Studio)';
+    }
+    if (line.includes('duplex') && line.includes('junior')) {
+        return 'Duplex Junior Suite';
+    }
+    if (line.includes('duplex')) {
+        return 'Duplex Suite';
+    }
+    if (line.includes('junior')) {
+        return 'Junior Suite';
+    }
+    if (line.includes('suite')) {
+        if (line.includes('3') || pType.includes('3pn')) return 'Suite 3BR';
+        if (line.includes('2') || pType.includes('2pn')) return 'Suite 2B';
+        return 'Suite 1B';
+    }
+
+    return null;
+}
+
+function syncCurrentUnitToProfitCalc(silent = false) {
+    const currentCode = (document.getElementById('lblMaCanTop')?.innerText || '').trim();
+    if (!currentCode || currentCode === '---') {
+        if (!silent) alert('Bạn chưa tra cứu mã căn nào trên trang chính.');
+        return;
+    }
+
+    const matchedRow = apartmentData.find(row => {
+        const rowCode = normalizeUnitCode(getCol(row, ['mã căn hộ', 'mã căn']));
+        return rowCode === normalizeUnitCode(currentCode);
+    });
+
+    if (matchedRow) {
+        const rawLine = getCol(matchedRow, ['dòng sản phẩm']);
+        const rawProductType = getCol(matchedRow, ['loại hình sản phẩm', 'loại hình']);
+        const matchedTypeKey = matchProfitUnitType(rawLine, rawProductType);
+
+        if (matchedTypeKey === '__EXCLUDED__') {
+            if (!silent) {
+                alert('Dòng sản phẩm Penthouse không áp dụng trong bảng tính chia sẻ doanh thu.');
+            }
+            recalculateProfit();
+            return;
+        }
+
+        document.getElementById('pfUnitCode').value = currentCode;
+
+        const rawPrice = getCol(matchedRow, ['giá trần', 'giá bán', 'thanh toán theo tiến độ', 'thanh toán tiến độ']);
+        const numericPrice = parseProfitNumber(rawPrice);
+        if (numericPrice > 0) {
+            document.getElementById('pfUnitPrice').value = formatProfitVND(numericPrice);
+        }
+
+        if (matchedTypeKey && PROFIT_UNIT_TYPES[matchedTypeKey] !== undefined) {
+            document.getElementById('pfUnitType').value = matchedTypeKey;
+            document.getElementById('pfTotalUnits').value = PROFIT_UNIT_TYPES[matchedTypeKey];
+        }
+    } else {
+        document.getElementById('pfUnitCode').value = currentCode;
+    }
+
+    recalculateProfit();
+}
+
+function onProfitUnitTypeChange() {
+    const typeSelect = document.getElementById('pfUnitType');
+    const totalUnitsInput = document.getElementById('pfTotalUnits');
+    if (!typeSelect || !totalUnitsInput) return;
+
+    const selectedType = typeSelect.value;
+    const count = PROFIT_UNIT_TYPES[selectedType] ?? 0;
+    totalUnitsInput.value = count;
+
+    recalculateProfit();
+}
+
+function parseProfitNumber(val) {
+    const digits = String(val || '').replace(/[^\d]/g, '');
+    return digits ? parseFloat(digits) : 0;
+}
+
+function formatProfitVND(num) {
+    if (!isFinite(num) || isNaN(num)) return '0';
+    return Math.round(num).toLocaleString('vi-VN');
+}
+
+function formatProfitPercent(ratio) {
+    if (!isFinite(ratio) || isNaN(ratio)) return '0,00%';
+    return `${(ratio * 100).toLocaleString('vi-VN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })}%`;
+}
+
+function handleProfitCurrencyInput(inputEl) {
+    const numeric = parseProfitNumber(inputEl.value);
+    inputEl.value = numeric > 0 ? formatProfitVND(numeric) : '';
+    recalculateProfit();
+}
+
+function recalculateProfit() {
+    const unitCode = (document.getElementById('pfUnitCode')?.value || '').trim() || '---';
+    const unitPrice = parseProfitNumber(document.getElementById('pfUnitPrice')?.value);
+    const unitType = document.getElementById('pfUnitType')?.value || '---';
+    const nightRate = parseProfitNumber(document.getElementById('pfNightRate')?.value);
+    const occupancyPct = Math.max(0, parseFloat(document.getElementById('pfOccupancy')?.value) || 0);
+    const occupancyRate = occupancyPct / 100;
+    const totalUnits = Math.max(0, parseFloat(document.getElementById('pfTotalUnits')?.value) || 0);
+
+    const totalTypeValue = unitPrice * totalUnits;
+    const equityRatio = totalTypeValue > 0 ? (unitPrice / totalTypeValue) : 0;
+
+    const operatingDays = occupancyRate * 365;
+    const grossRevenue100 = nightRate * operatingDays * totalUnits;
+    const customerShare35 = grossRevenue100 * 0.35;
+
+    const unitGrossProfit = customerShare35 * equityRatio;
+    const reserveFund4 = unitGrossProfit * 0.04;
+    const vat10 = unitGrossProfit * 0.10;
+    const unitNetProfit = unitGrossProfit - reserveFund4 - vat10;
+    const investmentYield = unitPrice > 0 ? (unitNetProfit / unitPrice) : 0;
+
+    document.getElementById('pfOutTotalTypeValue').innerText = formatProfitVND(totalTypeValue);
+    document.getElementById('pfOutEquityRatio').innerText = formatProfitPercent(equityRatio);
+
+    document.getElementById('pfRevType').innerText = unitType;
+    document.getElementById('pfRevNightRate').innerText = formatProfitVND(nightRate);
+    document.getElementById('pfRevOccupancy').innerText = `${occupancyPct.toLocaleString('vi-VN')}%`;
+    document.getElementById('pfRevDays').innerText = Math.round(operatingDays).toLocaleString('vi-VN');
+    document.getElementById('pfRevUnits').innerText = totalUnits.toLocaleString('vi-VN');
+    document.getElementById('pfRevGross100').innerText = formatProfitVND(grossRevenue100);
+    document.getElementById('pfRevShare35').innerText = formatProfitVND(customerShare35);
+
+    document.getElementById('pfResultTitle').innerText = `3. Lợi nhuận thực tế căn ${unitCode}`;
+    document.getElementById('pfNetBaseShare').innerText = formatProfitVND(customerShare35);
+    document.getElementById('pfNetEquityRatio').innerText = formatProfitPercent(equityRatio);
+    document.getElementById('pfNetProfitGross').innerText = formatProfitVND(unitGrossProfit);
+    document.getElementById('pfNetReserve4').innerText = formatProfitVND(reserveFund4);
+    document.getElementById('pfNetVat10').innerText = formatProfitVND(vat10);
+    document.getElementById('pfNetProfitFinal').innerText = formatProfitVND(unitNetProfit);
+    document.getElementById('pfNetYield').innerText = formatProfitPercent(investmentYield);
 }
